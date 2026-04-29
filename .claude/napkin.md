@@ -36,6 +36,18 @@
 2. **[2026-04-29] Write files use PowerShell Set-Content, nao Write tool (permissao negada)**
    Do instead: usar Set-Content -Path "..." -Value $content -Encoding UTF8 via Bash.
 
+3. **[2026-04-29] Vitest no web: alias @ deve apontar para raiz do app, nao src/**
+   Do instead: `'@': resolve(__dirname, '.')` em vitest.config.ts; tsconfig paths `@/*` → `./*`.
+
+4. **[2026-04-29] Workspace packages nao resolvem em Vite/Vitest sem alias explicito**
+   Do instead: adicionar `'@parabuains/db/schema': resolve(...)` e `'@parabuains/db': resolve(...)` no vitest.config.ts alias.
+
+5. **[2026-04-29] drizzle-orm nao resolve no vitest sem alias explicito**
+   Do instead: adicionar `'drizzle-orm': resolve('../../packages/db/node_modules/drizzle-orm')` no alias do vitest.config.ts.
+
+6. **[2026-04-29] @fastify/rate-limit usa redis.rateLimit() internamente — Proxy quebra**
+   Do instead: em NODE_ENV=test, passar `redis: undefined` ao plugin de rate-limit para usar in-memory store.
+
 ## User Directives
 1. **[2026-04-29] Responder sempre em portugues**
    Do instead: todas as respostas em pt-BR.
