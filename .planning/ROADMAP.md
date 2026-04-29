@@ -32,7 +32,15 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Redis e BullMQ estão conectados e o worker de notificações sobe sem erros
   4. Pipeline de CI executa lint, type-check e testes com sucesso
   5. Swagger/OpenAPI do Fastify está acessível em `/docs` no ambiente de desenvolvimento
-**Plans**: TBD
+**Plans**: 5 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Monorepo root: Turborepo + pnpm workspace + turbo.json + .env.example
+- [ ] 01-02-PLAN.md — Fastify v5 app: plugins (helmet/cors/rate-limit/jwt/swagger) + /health endpoint
+- [ ] 01-03-PLAN.md — Drizzle schema package: all 8 DB tables + migrations
+- [ ] 01-04-PLAN.md — Next.js 16 scaffold: App Router + Tailwind v4
+- [ ] 01-05-PLAN.md — CI pipeline (GitHub Actions) + Vitest smoke tests
+
 **UI hint**: no
 
 ### Phase 2: Authentication & Security Foundation
