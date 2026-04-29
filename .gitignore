@@ -1,0 +1,25 @@
+# Turborepo
+.turbo
+node_modules
+.env
+.env.local
+.env.*.local
+
+# Build outputs
+dist/
+.next/
+out/
+
+# Drizzle
+drizzle/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/settings.json
+.idea/
+
+# pnpm
+.pnpm-store/

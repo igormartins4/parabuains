@@ -1,0 +1,24 @@
+{
+  "name": "parabuains",
+  "version": "0.0.1",
+  "private": true,
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=9"
+  },
+  "scripts": {
+    "dev": "turbo run dev --parallel",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "type-check": "turbo run type-check",
+    "test": "turbo run test",
+    "db:generate": "turbo run db:generate --filter=@parabuains/db",
+    "db:push": "turbo run db:push --filter=@parabuains/db",
+    "db:migrate": "turbo run db:migrate --filter=@parabuains/db"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.0",
+    "typescript": "^6.0.3"
+  },
+  "packageManager": "pnpm@9.15.0"
+}
