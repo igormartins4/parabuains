@@ -102,53 +102,55 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | Phase 2 | Pending |
-| AUTH-02 | Phase 2 | Pending |
-| AUTH-03 | Phase 2 | Pending |
-| AUTH-04 | Phase 2 | Pending |
-| AUTH-05 | Phase 2 | Pending |
-| AUTH-06 | Phase 2 | Pending |
-| AUTH-07 | Phase 2 | Pending |
-| AUTH-08 | Phase 2 | Pending |
-| AUTH-09 | Phase 2 | Pending |
-| AUTH-10 | Phase 2 | Pending |
-| PROF-01 | Phase 3 | Pending |
-| PROF-02 | Phase 3 | Pending |
-| PROF-03 | Phase 3 | Pending |
-| PROF-04 | Phase 3 | Pending |
-| PROF-05 | Phase 3 | Pending |
-| PROF-06 | Phase 3 | Pending |
-| PROF-07 | Phase 3 | Pending |
-| PROF-08 | Phase 3 | Pending |
-| PROF-09 | Phase 3 | Pending |
-| SOCL-01 | Phase 4 | Pending |
-| SOCL-02 | Phase 4 | Pending |
-| SOCL-03 | Phase 4 | Pending |
-| SOCL-04 | Phase 4 | Pending |
-| SOCL-05 | Phase 4 | Pending |
-| SOCL-06 | Phase 4 | Pending |
-| SOCL-07 | Phase 4 | Pending |
-| SOCL-08 | Phase 4 | Pending |
-| MSG-01 | Phase 5 | Pending |
-| MSG-02 | Phase 5 | Pending |
-| MSG-03 | Phase 5 | Pending |
-| MSG-04 | Phase 5 | Pending |
-| MSG-05 | Phase 5 | Pending |
-| MSG-06 | Phase 5 | Pending |
-| MSG-07 | Phase 5 | Pending |
-| NOTF-01 | Phase 6 | Pending |
-| NOTF-02 | Phase 6 | Pending |
-| NOTF-03 | Phase 6 | Pending |
-| NOTF-04 | Phase 6 | Pending |
-| NOTF-05 | Phase 6 | Pending |
-| NOTF-06 | Phase 6 | Pending |
-| NOTF-07 | Phase 6 | Pending |
-| NOTF-08 | Phase 6 | Pending |
+| AUTH-01 | Phase 2 — Authentication & Security Foundation | Pending |
+| AUTH-02 | Phase 2 — Authentication & Security Foundation | Pending |
+| AUTH-03 | Phase 2 — Authentication & Security Foundation | Pending |
+| AUTH-04 | Phase 2 — Authentication & Security Foundation | Pending |
+| AUTH-05 | Phase 2 — Authentication & Security Foundation | Pending |
+| AUTH-06 | Phase 2 — Authentication & Security Foundation | Pending |
+| AUTH-07 | Phase 2 — Authentication & Security Foundation | Pending |
+| AUTH-08 | Phase 2 — Authentication & Security Foundation | Pending |
+| AUTH-09 | Phase 2 — Authentication & Security Foundation | Pending |
+| AUTH-10 | Phase 2 — Authentication & Security Foundation | Pending |
+| PROF-01 | Phase 3 — User Profiles | Pending |
+| PROF-02 | Phase 3 — User Profiles | Pending |
+| PROF-03 | Phase 3 — User Profiles | Pending |
+| PROF-04 | Phase 3 — User Profiles | Pending |
+| PROF-05 | Phase 3 — User Profiles | Pending |
+| PROF-06 | Phase 3 — User Profiles | Pending |
+| PROF-07 | Phase 3 — User Profiles | Pending |
+| PROF-08 | Phase 3 — User Profiles | Pending |
+| PROF-09 | Phase 3 — User Profiles | Pending |
+| SOCL-01 | Phase 4 — Social Graph | Pending |
+| SOCL-02 | Phase 4 — Social Graph | Pending |
+| SOCL-03 | Phase 4 — Social Graph | Pending |
+| SOCL-04 | Phase 4 — Social Graph | Pending |
+| SOCL-05 | Phase 4 — Social Graph | Pending |
+| SOCL-06 | Phase 4 — Social Graph | Pending |
+| SOCL-07 | Phase 4 — Social Graph | Pending |
+| SOCL-08 | Phase 4 — Social Graph | Pending |
+| MSG-01 | Phase 5 — Message Wall | Pending |
+| MSG-02 | Phase 5 — Message Wall | Pending |
+| MSG-03 | Phase 5 — Message Wall | Pending |
+| MSG-04 | Phase 5 — Message Wall | Pending |
+| MSG-05 | Phase 5 — Message Wall | Pending |
+| MSG-06 | Phase 5 — Message Wall | Pending |
+| MSG-07 | Phase 5 — Message Wall | Pending |
+| NOTF-01 | Phase 6 — Notifications | Pending |
+| NOTF-02 | Phase 6 — Notifications | Pending |
+| NOTF-03 | Phase 6 — Notifications | Pending |
+| NOTF-04 | Phase 6 — Notifications | Pending |
+| NOTF-05 | Phase 6 — Notifications | Pending |
+| NOTF-06 | Phase 6 — Notifications | Pending |
+| NOTF-07 | Phase 6 — Notifications | Pending |
+| NOTF-08 | Phase 6 — Notifications | Pending |
+
+> **Note:** Phase 1 (Foundation & Infrastructure) and Phase 7 (Security Hardening & Polish) cover no specific REQUIREMENTS.md entries — Phase 1 is infrastructure-only; Phase 7 audits cross-cutting security concerns from all prior phases.
 
 **Coverage:**
 - v1 requirements: 42 total
-- Mapped to phases: 42
-- Unmapped: 0 checkmark
+- Mapped to phases: 42/42 ✓
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-04-29*
