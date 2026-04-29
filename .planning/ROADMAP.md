@@ -53,7 +53,14 @@ Plans:
   3. Sessão persiste após fechar o navegador; refresh token rotation funciona corretamente
   4. Usuário pode ativar 2FA TOTP e precisa do código na próxima sessão
   5. Conta é bloqueada temporariamente após múltiplas tentativas de login falhas; rate limiting está ativo em todos os endpoints de auth
-**Plans**: TBD
+**Plans**: 4 plans
+
+Plans:
+- [ ] 02-01-PLAN.md — better-auth setup + Drizzle adapter + Resend email (verification + reset)
+- [ ] 02-02-PLAN.md — Google OAuth + account linking (no duplicate emails)
+- [ ] 02-03-PLAN.md — 2FA TOTP + 8 backup codes + setup UI
+- [ ] 02-04-PLAN.md — Auth UI pages + honeypot + lockout + BFF service token + Fastify guard
+
 **UI hint**: yes
 
 ### Phase 3: User Profiles
@@ -65,7 +72,14 @@ Plans:
   2. Página pública do perfil exibe contagem regressiva para o próximo aniversário e pode ser compartilhada com um clique
   3. Perfil com privacidade "privado" retorna 404 para visitantes não autorizados (não 403)
   4. Ano de nascimento é oculto por padrão para não-amigos; amigos em comum são exibidos na página do perfil
-**Plans**: TBD
+**Plans**: 4 plans
+
+Plans:
+- [ ] 03-01-PLAN.md — Profile API (Fastify): GET/PUT profile, username change, mutual friends
+- [ ] 03-02-PLAN.md — Avatar upload: R2 presigned URL + Sharp processing (400×400 webp)
+- [ ] 03-03-PLAN.md — Public profile page (RSC), privacy enforcement, countdown, sharing
+- [ ] 03-04-PLAN.md — OG card (@vercel/og) + profile settings UI (privacy, countdown, birth year)
+
 **UI hint**: yes
 
 ### Phase 4: Social Graph
@@ -77,7 +91,13 @@ Plans:
   2. Usuário pode remover amigo e gerenciar sua lista de amigos
   3. Feed exibe aniversários dos amigos nos próximos 30 dias; aniversariantes do dia aparecem destacados no topo
   4. Sistema sugere amigos de amigos como possíveis conexões
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 04-01-PLAN.md — Friendship API: send/accept/reject/block/remove + user search + suggestions
+- [ ] 04-02-PLAN.md — Birthday feed (30 days, timezone-aware) + SSE in-app notifications + BullMQ stubs
+- [ ] 04-03-PLAN.md — Social UI: feed page, friends list, requests inbox, search, profile integration
+
 **UI hint**: yes
 
 ### Phase 5: Message Wall
@@ -89,7 +109,12 @@ Plans:
   2. Aniversariante vê mensagens privadas; mensagens anônimas ocultam o remetente para o destinatário (mas o servidor registra para moderação)
   3. Aniversariante pode apagar mensagens do seu próprio mural; qualquer usuário pode reportar mensagem inadequada
   4. Mensagens passam por sanitização de HTML/XSS antes de serem salvas; nenhum conteúdo não-sanitizado é renderizado
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 05-01-PLAN.md — Wall Messages API: migration, MessageService (sanitize-html, anonymous, approval, reports), BullMQ enqueue
+- [ ] 05-02-PLAN.md — Wall UI: compose modal, wall section on profile, settings (who can post, anonymous, approval), pending inbox
+
 **UI hint**: yes
 
 ### Phase 6: Notifications
@@ -102,7 +127,13 @@ Plans:
   3. Usuário recebe notificação quando alguém escreve no seu mural e quando pedido de amizade é aceito
   4. Usuário pode configurar preferências de notificação por canal (e-mail/push) e por tipo de evento; preferências são respeitadas pelo worker
   5. Notificações são idempotentes: o mesmo lembrete não é enviado duas vezes no mesmo ano para o mesmo par (destinatário, aniversariante)
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 06-01-PLAN.md — Email notifications: Resend transport + React Email templates + BullMQ consumers + preferences API
+- [ ] 06-02-PLAN.md — Web Push: VAPID transport + service worker + push subscribe API + double-confirm UX
+- [ ] 06-03-PLAN.md — Birthday scheduler: BullMQ daily cron (timezone-aware delay) + notification preferences settings UI
+
 **UI hint**: yes
 
 ### Phase 7: Security Hardening & Polish
@@ -114,7 +145,13 @@ Plans:
   2. Rate limiting está configurado e testado em todos os endpoints de mutação (não apenas login): forgot-password, friendship request, wall message post
   3. 2FA é obrigatório em operações sensíveis (troca de e-mail, desabilitar 2FA, deletar conta); códigos de recuperação de 2FA são gerados, hasheados e funcionam
   4. Anomaly detection detecta e sinaliza: volume anormal de mensagens, taxa de pedidos de amizade, tentativas de login suspeitas
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 07-01-PLAN.md — Audit log: Fastify onSend hook, AuditRepository, 12 sensitive routes, 90-day cleanup job
+- [ ] 07-02-PLAN.md — Anomaly detection (Redis thresholds) + 2FA enforcement on sensitive ops + rate limiting audit
+- [ ] 07-03-PLAN.md — CSP tightening + loading skeletons + error boundaries + a11y + final test suite + launch checklist
+
 **UI hint**: no
 
 ## Progress
@@ -124,10 +161,10 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Infrastructure | 0/? | Not started | - |
-| 2. Authentication & Security Foundation | 0/? | Not started | - |
-| 3. User Profiles | 0/? | Not started | - |
-| 4. Social Graph | 0/? | Not started | - |
-| 5. Message Wall | 0/? | Not started | - |
-| 6. Notifications | 0/? | Not started | - |
-| 7. Security Hardening & Polish | 0/? | Not started | - |
+| 1. Foundation & Infrastructure | 0/5 | Not started | - |
+| 2. Authentication & Security Foundation | 0/4 | Not started | - |
+| 3. User Profiles | 0/4 | Not started | - |
+| 4. Social Graph | 0/3 | Not started | - |
+| 5. Message Wall | 0/2 | Not started | - |
+| 6. Notifications | 0/3 | Not started | - |
+| 7. Security Hardening & Polish | 0/3 | Not started | - |

@@ -5,16 +5,29 @@
 See: .planning/PROJECT.md (updated 2026-04-29)
 
 **Core value:** Amigos nunca mais esquecem seu aniversario - e voce ve o de todos de forma facil, num so lugar.
-**Current focus:** Phase 1 — Foundation & Infrastructure
+**Current focus:** Phase 1 — Foundation & Infrastructure (ready to execute)
 
 ## Current Position
 
 Phase: 1 of 7 (Foundation & Infrastructure)
-Plan: 0 of ? in current phase
-Status: Ready to plan
-Last activity: 2026-04-29 — Roadmap criado com 7 fases cobrindo 42 requisitos v1
+Plan: 0 of 5 in current phase
+Status: Ready to execute — all 7 phases planned, all CONTEXTs and PLANs written
+Last activity: 2026-04-29 — All 24 plans (Phases 1–7) written and ready for execution
 
 Progress: [░░░░░░░░░░] 0%
+
+## Planning Complete — Full Plan Inventory
+
+| Phase | Plans | Files |
+|-------|-------|-------|
+| 1. Foundation & Infrastructure | 5 | 01-01 through 01-05 |
+| 2. Authentication & Security Foundation | 4 | 02-01 through 02-04 |
+| 3. User Profiles | 4 | 03-01 through 03-04 |
+| 4. Social Graph | 3 | 04-01 through 04-03 |
+| 5. Message Wall | 2 | 05-01 through 05-02 |
+| 6. Notifications | 3 | 06-01 through 06-03 |
+| 7. Security Hardening & Polish | 3 | 07-01 through 07-03 |
+| **Total** | **24** | |
 
 ## Performance Metrics
 
@@ -29,10 +42,6 @@ Progress: [░░░░░░░░░░] 0%
 |-------|-------|-------|----------|
 | - | - | - | - |
 
-**Recent Trend:**
-- Last 5 plans: —
-- Trend: —
-
 *Updated after each plan completion*
 
 ## Accumulated Context
@@ -43,28 +52,46 @@ Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
 - Stack confirmado: Next.js + Fastify v5 + PostgreSQL + Drizzle + better-auth + BullMQ + Redis + Tailwind v4
-- Monorepo tool: turborepo ou nx — não resolvido; decidir na Phase 1
-- Avatar hosting: Cloudflare R2 preferido sobre S3 (sem egress fees); validar patterns com Next.js na Phase 3
-- Twitter/X OAuth: listado como requisito mas confiabilidade da API em dúvida; validar na Phase 2
+- Monorepo tool: Turborepo + pnpm (resolved)
+- Auth: better-auth no BFF (Next.js), Google OAuth only in Phase 2 (Twitter/X deferred)
+- 2FA: TOTP opcional; obrigatório em ops sensíveis apenas se usuário tiver ativado; 8 backup codes
+- Session: access 15min + refresh 30dias; lockout 10 tentativas/15min → 30min
+- Username: 3-30 chars, [a-z0-9_-], mutável (antigo → 410 Gone)
+- Avatar: Cloudflare R2 + Sharp (400×400 webp)
+- Privacy: public/friends/private; private → 404 para não autorizados
+- Countdown: configurável (público por padrão)
+- Compartilhamento: OG card dinâmico via @vercel/og
+- Social: friendship bilateral, modelo Instagram para perfil privado
+- Feed: 30 dias, aniversariantes do dia em destaque; SSE para in-app notifications
+- Wall: configurável pelo dono (quem pode postar, anônimo, aprovação); 500 chars; sanitize-html
+- Notificações: Resend email + VAPID push; 1/3/7 dias + dia; hora configurável; idempotência via notification_log
+- Audit log: tabela PostgreSQL, retenção 90 dias
+- Anomaly detection: regras Redis threshold (sem custo extra)
+- Deploy target: NOT decided — deferred
 
 ### Pending Todos
 
-None yet.
+None — all phases planned, ready to start executing Phase 1.
 
 ### Blockers/Concerns
 
-- Monorepo tool (turborepo vs nx) não foi pesquisado em profundidade — resolver no início da Phase 1
-- Deployment target não especificado — BullMQ Worker precisa de processo separado (Railway/Render/Fly.io); afeta CI/CD da Phase 1
-- PWA installability não está explicitamente no escopo v1, mas service worker é necessário para push — clarificar antes da Phase 6
+- Deploy target not specified (Railway/Render/Fly.io) — deferred; BullMQ Worker needs a separate process
+- RESEND_API_KEY required before Phase 2 email verification works — configure domain before executing Phase 2
+- GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET required before Phase 2 OAuth works
+- Cloudflare R2 bucket + credentials required before Phase 3 avatar upload works
+- VAPID keys must be generated before Phase 6 push works (`npx web-push generate-vapid-keys`)
 
 ## Deferred Items
 
 | Category | Item | Status | Deferred At |
 |----------|------|--------|-------------|
-| *(none)* | | | |
+| OAuth | Twitter/X OAuth | Deferred to v2 | Phase 2 discussion |
+| Deploy | Deployment target (Railway/Render/Fly.io) | Deferred | Phase 1 planning |
+| Avatar | Cloudflare R2 bucket creation | Pre-Phase 3 task | Phase 3 planning |
+| PWA | PWA install prompt | Post-MVP | Phase 6 discussion |
 
 ## Session Continuity
 
 Last session: 2026-04-29
-Stopped at: Roadmap e STATE.md criados; REQUIREMENTS.md atualizado com traceability
-Resume file: None
+Stopped at: All 24 plans written (Phases 1–7); ready to execute Phase 1 Plan 01
+Resume file: None — start with `01-01-PLAN.md`

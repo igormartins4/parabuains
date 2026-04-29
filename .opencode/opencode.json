@@ -1,0 +1,11 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "permission": {
+    "read": {
+      "C:/Users/igorsantos/code/parabuains/.opencode/get-shit-done/*": "allow"
+    },
+    "external_directory": {
+      "C:/Users/igorsantos/code/parabuains/.opencode/get-shit-done/*": "allow"
+    }
+  }
+}
