@@ -3,6 +3,7 @@ import helmetPlugin from './plugins/helmet.js';
 import corsPlugin from './plugins/cors.js';
 import rateLimitPlugin from './plugins/rate-limit.js';
 import jwtPlugin from './plugins/jwt.js';
+import authPlugin from './plugins/auth.js';
 import swaggerPlugin from './plugins/swagger.js';
 import sensiblePlugin from './plugins/sensible.js';
 import { healthRoutes } from './modules/health/routes.js';
@@ -20,6 +21,7 @@ export async function buildApp() {
   await app.register(corsPlugin);
   await app.register(rateLimitPlugin);
   await app.register(jwtPlugin);
+  await app.register(authPlugin);
 
   // API documentation (dev only)
   await app.register(swaggerPlugin);

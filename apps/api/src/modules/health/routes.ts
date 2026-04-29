@@ -7,6 +7,7 @@ export async function healthRoutes(app: FastifyInstance) {
   app.get(
     '/health',
     {
+      config: { skipAuth: true },
       schema: {
         tags: ['health'],
         summary: 'Infrastructure health check',
