@@ -10,10 +10,18 @@ import {
 import { AppError } from '../../errors.js';
 import { notificationsQueue, type FriendshipAcceptedJob } from '../../queues/notifications.queue.js';
 import { publishUserEvent } from '../../lib/redis-pub.js';
+import { AnomalyDetectionService } from '../anomaly/anomaly-detection.service.js';
+import { AuditRepository } from '../audit/audit.repository.js';
+import { getRedis } from '../../infrastructure/redis.js';
 
 export async function friendshipRoutes(fastify: FastifyInstance) {
   const repo = new FriendshipRepository();
   const service = new FriendshipService(repo);
+  // Anomaly detection — only connect Redis in non-test env
+  const anomalyService =
+    process.env['NODE_ENV'] !== 'test'
+      ? new AnomalyDetectionService(getRedis(), new AuditRepository())
+      : null;
 
   // Error handler for AppError instances
   fastify.setErrorHandler((error, _request, reply) => {
@@ -24,14 +32,30 @@ export async function friendshipRoutes(fastify: FastifyInstance) {
     reply.send(error);
   });
 
-  // POST /friendships — enviar pedido de amizade
-  fastify.post('/friendships', async (request, reply) => {
+  // POST /friendships — enviar pedido de amizade (rate limit: 30 req/hora por userId)
+  fastify.post(
+    '/friendships',
+    {
+      config: {
+        rateLimit: {
+          max: 30,
+          timeWindow: 3600 * 1000,
+          keyGenerator: (req) =>
+            (req as typeof req & { userId?: string | null }).userId ?? req.ip,
+        },
+      },
+    },
+    async (request, reply) => {
     if (!request.userId) {
       return reply.code(401).send({ error: 'UNAUTHORIZED', message: 'Authentication required' });
     }
     const body = sendRequestSchema.parse(request.body);
     request.auditAction = 'friendship.create';
     request.auditResource = `user:${body.addresseeId}`;
+    // Anomaly detection: check friendship flood
+    if (anomalyService) {
+      await anomalyService.checkFriendshipFlood(request.userId);
+    }
     const result = await service.sendRequest(request.userId, body.addresseeId);
     return reply.status(201).send(result);
   });

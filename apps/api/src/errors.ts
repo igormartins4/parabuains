@@ -38,3 +38,25 @@ export class BadRequestError extends AppError {
     super(400, message, 'BAD_REQUEST');
   }
 }
+
+export class TotpRequiredError extends AppError {
+  constructor() {
+    super(
+      403,
+      'This operation requires TOTP verification. Please provide your 2FA code.',
+      'TOTP_REQUIRED',
+    );
+  }
+}
+
+export class InvalidTotpError extends AppError {
+  constructor() {
+    super(403, 'Invalid or expired TOTP code.', 'TOTP_INVALID');
+  }
+}
+
+export class TooManyRequestsError extends AppError {
+  constructor(message = 'Too many requests') {
+    super(429, message, 'TOO_MANY_REQUESTS');
+  }
+}

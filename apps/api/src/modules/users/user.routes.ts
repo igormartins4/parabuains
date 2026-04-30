@@ -8,6 +8,7 @@ import {
   mutualFriendsParamsSchema,
 } from './user.schemas.js';
 import { AppError } from '../../errors.js';
+import { require2FAIfEnabled } from '../audit/totp-enforcement.js';
 
 export async function userRoutes(fastify: FastifyInstance) {
   const repo = new UserRepository();
@@ -47,11 +48,16 @@ export async function userRoutes(fastify: FastifyInstance) {
     return reply.send(updated);
   });
 
-  // POST /v1/users/me/username — change username (auth required)
+  // POST /v1/users/me/username — change username (auth required, 2FA if enabled)
   fastify.post('/users/me/username', async (request, reply) => {
     if (!request.userId) {
       return reply.code(401).send({ error: 'UNAUTHORIZED', message: 'Authentication required' });
     }
+    // 2FA enforcement: require X-2FA-Verified header if 2FA is enabled
+    await require2FAIfEnabled(
+      request.userId,
+      request.headers['x-2fa-verified'] as string | undefined,
+    );
     request.auditAction = 'user.username_change';
     request.auditResource = `user:${request.userId}`;
     const input = usernameChangeSchema.parse(request.body);
