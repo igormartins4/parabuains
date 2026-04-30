@@ -30,6 +30,8 @@ export async function friendshipRoutes(fastify: FastifyInstance) {
       return reply.code(401).send({ error: 'UNAUTHORIZED', message: 'Authentication required' });
     }
     const body = sendRequestSchema.parse(request.body);
+    request.auditAction = 'friendship.create';
+    request.auditResource = `user:${body.addresseeId}`;
     const result = await service.sendRequest(request.userId, body.addresseeId);
     return reply.status(201).send(result);
   });
@@ -76,6 +78,8 @@ export async function friendshipRoutes(fastify: FastifyInstance) {
       return reply.code(401).send({ error: 'UNAUTHORIZED', message: 'Authentication required' });
     }
     const { id } = friendshipIdParamsSchema.parse(request.params);
+    request.auditAction = 'friendship.accept';
+    request.auditResource = `friendship:${id}`;
     const result = await service.acceptRequest(id, request.userId);
 
     // Enqueue BullMQ job para Fase 6 consumir
@@ -103,6 +107,8 @@ export async function friendshipRoutes(fastify: FastifyInstance) {
       return reply.code(401).send({ error: 'UNAUTHORIZED', message: 'Authentication required' });
     }
     const { id } = friendshipIdParamsSchema.parse(request.params);
+    request.auditAction = 'friendship.remove';
+    request.auditResource = `friendship:${id}`;
     await service.removeOrDecline(id, request.userId);
     return reply.status(204).send();
   });

@@ -7,7 +7,11 @@ import type { WallSettings } from './message.types.js';
 
 export async function messageRoutes(fastify: FastifyInstance): Promise<void> {
   const repo = new DrizzleMessageRepository();
-  const service = new MessageService(repo, getNotificationsQueue());
+  // Lazy: only call getNotificationsQueue() inside handlers, not at module init
+  const service = new MessageService(repo, {
+    add: (...args: Parameters<ReturnType<typeof getNotificationsQueue>['add']>) =>
+      getNotificationsQueue().add(...args),
+  } as ReturnType<typeof getNotificationsQueue>);
 
   // Error handler for AppError instances and service errors
   fastify.setErrorHandler((error: unknown, _request, reply) => {
@@ -63,6 +67,9 @@ export async function messageRoutes(fastify: FastifyInstance): Promise<void> {
       const { username } = request.params;
       const authorId = request.userId;
 
+      request.auditAction = 'message.post';
+      request.auditResource = `user:${username}`;
+
       const profile = await repo.findUserWithWallSettings(username);
       if (!profile) return reply.status(404).send({ error: 'NOT_FOUND', message: 'User not found' });
 
@@ -96,6 +103,8 @@ export async function messageRoutes(fastify: FastifyInstance): Promise<void> {
       if (!request.userId) {
         return reply.code(401).send({ error: 'UNAUTHORIZED', message: 'Authentication required' });
       }
+      request.auditAction = 'message.delete';
+      request.auditResource = `message:${request.params.id}`;
       await service.deleteMessage(request.params.id, request.userId);
       return reply.status(204).send();
     },
@@ -147,6 +156,8 @@ export async function messageRoutes(fastify: FastifyInstance): Promise<void> {
       if (!request.userId) {
         return reply.code(401).send({ error: 'UNAUTHORIZED', message: 'Authentication required' });
       }
+      request.auditAction = 'message.report';
+      request.auditResource = `message:${request.params.id}`;
       await service.reportMessage(
         request.params.id,
         request.userId,
@@ -183,6 +194,8 @@ export async function messageRoutes(fastify: FastifyInstance): Promise<void> {
       if (!request.userId) {
         return reply.code(401).send({ error: 'UNAUTHORIZED', message: 'Authentication required' });
       }
+      request.auditAction = 'wall.settings_update';
+      request.auditResource = `user:${request.userId}`;
       await service.updateWallSettings(request.userId, request.body);
       return reply.send({ updated: true });
     },

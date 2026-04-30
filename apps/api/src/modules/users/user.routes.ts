@@ -40,6 +40,8 @@ export async function userRoutes(fastify: FastifyInstance) {
     if (!request.userId) {
       return reply.code(401).send({ error: 'UNAUTHORIZED', message: 'Authentication required' });
     }
+    request.auditAction = 'user.profile_update';
+    request.auditResource = `user:${request.userId}`;
     const data = updateProfileSchema.parse(request.body);
     const updated = await service.updateProfile(request.userId, data);
     return reply.send(updated);
@@ -50,6 +52,8 @@ export async function userRoutes(fastify: FastifyInstance) {
     if (!request.userId) {
       return reply.code(401).send({ error: 'UNAUTHORIZED', message: 'Authentication required' });
     }
+    request.auditAction = 'user.username_change';
+    request.auditResource = `user:${request.userId}`;
     const input = usernameChangeSchema.parse(request.body);
     const updated = await service.changeUsername(request.userId, input);
     return reply.send({ username: (updated as { username: string }).username });

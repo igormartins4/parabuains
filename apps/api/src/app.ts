@@ -6,6 +6,7 @@ import jwtPlugin from './plugins/jwt.js';
 import authPlugin from './plugins/auth.js';
 import swaggerPlugin from './plugins/swagger.js';
 import sensiblePlugin from './plugins/sensible.js';
+import { auditPlugin } from './plugins/audit.js';
 import { healthRoutes } from './modules/health/routes.js';
 import { usersPlugin } from './modules/users/user.plugin.js';
 import { friendshipsPlugin } from './modules/friendships/friendship.plugin.js';
@@ -13,6 +14,7 @@ import { feedPlugin } from './modules/feed/feed.plugin.js';
 import { ssePlugin } from './modules/notifications/sse.plugin.js';
 import { messagesPlugin } from './modules/messages/message.plugin.js';
 import { notificationPlugin } from './modules/notifications/notification.plugin.js';
+import { auditModulePlugin } from './modules/audit/audit.plugin.js';
 
 export async function buildApp() {
   const app = Fastify({
@@ -35,6 +37,9 @@ export async function buildApp() {
   // HTTP helpers
   await app.register(sensiblePlugin);
 
+  // Audit log plugin (must be before routes)
+  await app.register(auditPlugin);
+
   // Routes
   await app.register(healthRoutes, { prefix: '/v1' });
   await app.register(usersPlugin, { prefix: '/v1' });
@@ -43,6 +48,7 @@ export async function buildApp() {
   await app.register(ssePlugin, { prefix: '/v1' });
   await app.register(messagesPlugin, { prefix: '/v1' });
   await app.register(notificationPlugin, { prefix: '/v1' });
+  await app.register(auditModulePlugin, { prefix: '/v1' });
 
   return app;
 }
