@@ -12,6 +12,8 @@ import { ShareButton } from '@/components/profile/ShareButton';
 import { MutualFriends } from '@/components/profile/MutualFriends';
 import { FriendshipButton } from './FriendshipButton';
 import type { FriendshipStatus } from '@/lib/api/friendships';
+import { WallSection } from './WallSection';
+import { getWallMessages } from '@/lib/api/messages';
 
 interface ProfilePageProps {
   params: Promise<{ username: string }>;
@@ -115,6 +117,19 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
     ]);
   }
 
+  // Fetch wall messages (auth optional — public messages visible to all)
+  const wallMessages = await getWallMessages(username).catch(() => []);
+
+  // Determine if current user can post on this wall (server-side pre-computation)
+  const isFriendForWall =
+    friendshipData?.status === 'accepted' || session?.user?.id === profile.id;
+  const canPost = (() => {
+    if (!session?.user) return false;
+    if (profile.wallWhoCanPost === 'authenticated') return true;
+    if (profile.wallWhoCanPost === 'friends') return isFriendForWall;
+    return false;
+  })();
+
   // Determine countdown visibility
   const isFriend = mutualFriends.count > 0; // approximate — real check is via friendship API
   const isSelf = session?.user?.id === profile.id;
@@ -183,6 +198,16 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
           <MutualFriends count={mutualFriends.count} sample={mutualFriends.sample} />
         </section>
       )}
+
+      {/* Wall messages */}
+      <WallSection
+        username={username}
+        messages={wallMessages}
+        currentUserId={session?.user?.id ?? null}
+        profileOwnerId={profile.id as string}
+        wallAllowAnonymous={profile.wallAllowAnonymous ?? true}
+        canPost={canPost}
+      />
     </main>
   );
 }
