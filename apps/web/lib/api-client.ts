@@ -1,6 +1,6 @@
+import { headers } from 'next/headers';
 import { auth } from './auth';
 import { createServiceToken } from './service-token';
-import { headers } from 'next/headers';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
 
@@ -16,7 +16,7 @@ export async function apiFetch<T = unknown>(path: string, options: FetchOptions 
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session) throw new Error('Unauthenticated: no active session');
     const token = await createServiceToken(session.user.id, session.session.id);
-    reqHeaders['Authorization'] = `Bearer ${token}`;
+    reqHeaders.Authorization = `Bearer ${token}`;
   }
   const response = await fetch(`${API_URL}${path}`, { ...fetchOptions, headers: reqHeaders });
   if (!response.ok) {

@@ -13,7 +13,9 @@ export function BirthYearToggle({ birthYearHidden }: BirthYearToggleProps) {
   function handleToggle() {
     const formData = new FormData();
     formData.set('birthYearHidden', String(!birthYearHidden));
-    startTransition(() => { void updatePrivacyAction(formData); });
+    startTransition(() => {
+      void updatePrivacyAction(formData);
+    });
   }
 
   return (
@@ -21,11 +23,12 @@ export function BirthYearToggle({ birthYearHidden }: BirthYearToggleProps) {
       <div>
         <h3 className="text-sm font-semibold text-gray-700">Ocultar ano de nascimento</h3>
         <p className="text-xs text-gray-500 mt-0.5">
-          Não-amigos verão apenas dia e mês (ex: &quot;15 de março&quot;). Amigos podem ver o
-          ano completo se esta opção estiver desativada.
+          Não-amigos verão apenas dia e mês (ex: &quot;15 de março&quot;). Amigos podem ver o ano
+          completo se esta opção estiver desativada.
         </p>
       </div>
       <button
+        type="button"
         role="switch"
         aria-checked={birthYearHidden}
         onClick={handleToggle}

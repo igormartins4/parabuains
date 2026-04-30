@@ -22,7 +22,6 @@ export function ShareButton({ username, displayName }: ShareButtonProps) {
         });
       } catch (err) {
         if (err instanceof Error && err.name !== 'AbortError') {
-          console.error('Share failed:', err);
         }
       }
     } else {
@@ -45,6 +44,7 @@ export function ShareButton({ username, displayName }: ShareButtonProps) {
 
   return (
     <button
+      type="button"
       onClick={handleShare}
       className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 hover:bg-gray-50 transition-colors text-sm font-medium"
       aria-label="Compartilhar perfil"
@@ -66,6 +66,7 @@ export function ShareButton({ username, displayName }: ShareButtonProps) {
 
 function ShareIcon({ className }: { className?: string }) {
   return (
+    // biome-ignore lint/a11y/noSvgWithoutTitle: decorative icon — parent button has aria-label
     <svg
       className={className}
       viewBox="0 0 24 24"
@@ -84,6 +85,7 @@ function ShareIcon({ className }: { className?: string }) {
 
 function CheckIcon({ className }: { className?: string }) {
   return (
+    // biome-ignore lint/a11y/noSvgWithoutTitle: decorative icon — parent button has aria-label
     <svg
       className={className}
       viewBox="0 0 24 24"

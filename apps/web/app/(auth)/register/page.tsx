@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
 import Link from 'next/link';
-import { signUp } from '@/lib/auth-client';
+import { type FormEvent, useState } from 'react';
 import { GoogleSignInButton } from '@/components/auth/GoogleSignInButton';
+import { signUp } from '@/lib/auth-client';
 
 export default function RegisterPage() {
   const [name, setName] = useState('');
@@ -40,9 +40,7 @@ export default function RegisterPage() {
       <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm text-center">
         <div className="mb-3 text-4xl">📧</div>
         <h2 className="text-lg font-semibold text-gray-900">Verifique seu e-mail</h2>
-        <p className="mt-2 text-sm text-gray-600">
-          Verifique seu e-mail para ativar sua conta.
-        </p>
+        <p className="mt-2 text-sm text-gray-600">Verifique seu e-mail para ativar sua conta.</p>
         <p className="mt-4 text-sm text-gray-500">
           Já verificou?{' '}
           <Link href="/login" className="text-indigo-600 hover:underline">
@@ -117,9 +115,7 @@ export default function RegisterPage() {
           <p className="mt-1 text-xs text-gray-500">Mínimo de 8 caracteres</p>
         </div>
 
-        {error && (
-          <p className="text-sm text-red-600">{error}</p>
-        )}
+        {error && <p className="text-sm text-red-600">{error}</p>}
 
         <button
           type="submit"

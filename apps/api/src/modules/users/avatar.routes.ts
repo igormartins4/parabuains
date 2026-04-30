@@ -1,12 +1,16 @@
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
+import { AppError } from '../../errors.js';
 import { AvatarService } from './avatar.service.js';
 import { UserRepository } from './user.repository.js';
-import { AppError } from '../../errors.js';
 
 const uploadUrlRequestSchema = z.object({
   mimeType: z.enum(['image/jpeg', 'image/png', 'image/webp']),
-  fileSize: z.number().int().positive().max(5 * 1024 * 1024),
+  fileSize: z
+    .number()
+    .int()
+    .positive()
+    .max(5 * 1024 * 1024),
 });
 
 export async function avatarRoutes(fastify: FastifyInstance) {

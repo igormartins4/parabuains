@@ -1,9 +1,9 @@
 'use client';
-import { useState, useCallback, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { searchUsers, sendFriendRequest } from '@/lib/api/friendships';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { FriendshipStatus } from '@/lib/api/friendships';
+import { searchUsers, sendFriendRequest } from '@/lib/api/friendships';
 
 interface SearchResult {
   id: string;
@@ -48,8 +48,7 @@ export function UserSearch() {
       const newResults: SearchResult[] = data.results ?? [];
       setResults((prev) => (cursor ? [...prev, ...newResults] : newResults));
       setNextCursor(data.nextCursor ?? null);
-    } catch (e) {
-      console.error(e);
+    } catch (_e) {
     } finally {
       setLoading(false);
     }
@@ -72,7 +71,7 @@ export function UserSearch() {
           void doSearch(debouncedQuery, nextCursor);
         }
       },
-      { threshold: 0.5 },
+      { threshold: 0.5 }
     );
     observer.observe(sentinel);
     return () => observer.disconnect();
@@ -104,6 +103,7 @@ export function UserSearch() {
       {loading && query.length >= 2 && (
         <div className="mt-2 space-y-2">
           {[...Array(3)].map((_, i) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: static skeleton list — index is stable and intentional
             <div key={i} className="h-16 bg-neutral-100 rounded-xl animate-pulse" />
           ))}
         </div>
@@ -134,13 +134,12 @@ export function UserSearch() {
                   )}
                 </Link>
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-neutral-900 truncate">
-                    {result.displayName}
-                  </p>
+                  <p className="font-medium text-neutral-900 truncate">{result.displayName}</p>
                   <p className="text-xs text-neutral-500">@{result.username}</p>
                 </div>
                 {status === 'none' && (
                   <button
+                    type="button"
                     onClick={() => void handleAddFriend(result.id)}
                     className="shrink-0 px-3 py-1.5 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                   >

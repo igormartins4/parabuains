@@ -1,8 +1,13 @@
 export default function FeedLoading() {
   return (
-    <div className="space-y-4 p-4 max-w-2xl mx-auto" role="status" aria-label="Carregando feed de aniversários...">
+    <div
+      className="space-y-4 p-4 max-w-2xl mx-auto"
+      role="status"
+      aria-label="Carregando feed de aniversários..."
+    >
       {Array.from({ length: 5 }).map((_, i) => (
         <div
+          // biome-ignore lint/suspicious/noArrayIndexKey: static skeleton list — order never changes
           key={i}
           className="animate-pulse flex items-center gap-4 p-4 rounded-lg bg-white shadow-sm"
         >

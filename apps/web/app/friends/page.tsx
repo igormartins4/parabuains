@@ -21,6 +21,7 @@ export default function FriendsPage() {
       <div className="flex gap-1 p-1 bg-neutral-100 rounded-xl mb-6">
         {(['friends', 'pending', 'search'] as Tab[]).map((t) => (
           <button
+            type="button"
             key={t}
             onClick={() => setTab(t)}
             className={`flex-1 py-2 text-sm font-medium rounded-lg transition-colors ${
@@ -35,9 +36,7 @@ export default function FriendsPage() {
       </div>
 
       {tab === 'friends' && (
-        <p className="text-center text-neutral-500 py-8">
-          Lista de amigos — a ser implementada.
-        </p>
+        <p className="text-center text-neutral-500 py-8">Lista de amigos — a ser implementada.</p>
       )}
       {tab === 'pending' && <PendingRequests />}
       {tab === 'search' && <UserSearch />}

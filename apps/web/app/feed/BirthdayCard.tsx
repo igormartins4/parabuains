@@ -9,8 +9,18 @@ interface BirthdayCardProps {
 }
 
 const MONTH_NAMES = [
-  'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
-  'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez',
+  'Jan',
+  'Fev',
+  'Mar',
+  'Abr',
+  'Mai',
+  'Jun',
+  'Jul',
+  'Ago',
+  'Set',
+  'Out',
+  'Nov',
+  'Dez',
 ];
 
 export function BirthdayCard({ entry, isToday }: BirthdayCardProps) {
@@ -25,9 +35,7 @@ export function BirthdayCard({ entry, isToday }: BirthdayCardProps) {
     <Link
       href={`/${entry.username}`}
       className={`flex items-center gap-3 p-4 rounded-xl transition-colors hover:bg-neutral-50 ${
-        isToday
-          ? 'bg-amber-50 border border-amber-200'
-          : 'bg-white border border-neutral-100'
+        isToday ? 'bg-amber-50 border border-amber-200' : 'bg-white border border-neutral-100'
       }`}
     >
       <div className="relative shrink-0">
@@ -47,6 +55,7 @@ export function BirthdayCard({ entry, isToday }: BirthdayCardProps) {
         {isToday && (
           <span
             className="absolute -bottom-1 -right-1 text-lg"
+            role="img"
             aria-label="aniversário hoje"
           >
             🎂
@@ -59,14 +68,8 @@ export function BirthdayCard({ entry, isToday }: BirthdayCardProps) {
       </div>
       <div className="text-right shrink-0">
         <p className="text-sm font-medium text-neutral-700">{dateStr}</p>
-        <p
-          className={`text-xs ${
-            isToday ? 'text-amber-600 font-semibold' : 'text-neutral-400'
-          }`}
-        >
-          {isToday
-            ? 'Hoje!'
-            : `em ${entry.daysUntil} dia${entry.daysUntil === 1 ? '' : 's'}`}
+        <p className={`text-xs ${isToday ? 'text-amber-600 font-semibold' : 'text-neutral-400'}`}>
+          {isToday ? 'Hoje!' : `em ${entry.daysUntil} dia${entry.daysUntil === 1 ? '' : 's'}`}
         </p>
       </div>
     </Link>

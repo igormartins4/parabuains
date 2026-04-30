@@ -1,6 +1,6 @@
-import { eq, and, or, sql, ne, inArray } from 'drizzle-orm';
-import { getDb } from '../../infrastructure/db.js';
 import { friendships, users } from '@parabuains/db';
+import { and, eq, inArray, ne, or, sql } from 'drizzle-orm';
+import { getDb } from '../../infrastructure/db.js';
 
 export type FriendshipRow = typeof friendships.$inferSelect;
 export type FriendUserRow = typeof users.$inferSelect;
@@ -18,8 +18,8 @@ export class FriendshipRepository {
       .where(
         or(
           and(eq(friendships.requesterId, userAId), eq(friendships.addresseeId, userBId)),
-          and(eq(friendships.requesterId, userBId), eq(friendships.addresseeId, userAId)),
-        ),
+          and(eq(friendships.requesterId, userBId), eq(friendships.addresseeId, userAId))
+        )
       )
       .limit(1);
     return row ?? null;
@@ -27,11 +27,7 @@ export class FriendshipRepository {
 
   /** Encontra pedido por ID */
   async findById(id: string): Promise<FriendshipRow | null> {
-    const [row] = await this.db
-      .select()
-      .from(friendships)
-      .where(eq(friendships.id, id))
-      .limit(1);
+    const [row] = await this.db.select().from(friendships).where(eq(friendships.id, id)).limit(1);
     return row ?? null;
   }
 
@@ -41,6 +37,7 @@ export class FriendshipRepository {
       .insert(friendships)
       .values({ requesterId, addresseeId, status: 'pending' })
       .returning();
+    // biome-ignore lint/style/noNonNullAssertion: Drizzle returning() always yields a row on successful insert
     return row!;
   }
 
@@ -51,6 +48,7 @@ export class FriendshipRepository {
       .set({ status: 'accepted', updatedAt: new Date() })
       .where(eq(friendships.id, id))
       .returning();
+    // biome-ignore lint/style/noNonNullAssertion: Drizzle returning() always yields a row on successful update
     return row!;
   }
 
@@ -71,19 +69,16 @@ export class FriendshipRepository {
       .where(
         and(
           eq(friendships.status, 'accepted'),
-          or(eq(friendships.requesterId, userId), eq(friendships.addresseeId, userId)),
-        ),
+          or(eq(friendships.requesterId, userId), eq(friendships.addresseeId, userId))
+        )
       );
 
-    return this.db
-      .select()
-      .from(users)
-      .where(sql`${users.id} IN (${friendIds})`);
+    return this.db.select().from(users).where(sql`${users.id} IN (${friendIds})`);
   }
 
   /** Lista pedidos recebidos (pending, addressee = userId) */
   async listPendingReceived(
-    userId: string,
+    userId: string
   ): Promise<(FriendshipRow & { requesterUser: FriendUserRow })[]> {
     const rows = await this.db
       .select({ friendship: friendships, requesterUser: users })
@@ -96,7 +91,7 @@ export class FriendshipRepository {
 
   /** Lista pedidos enviados (pending, requester = userId) */
   async listPendingSent(
-    userId: string,
+    userId: string
   ): Promise<(FriendshipRow & { addresseeUser: FriendUserRow })[]> {
     const rows = await this.db
       .select({ friendship: friendships, addresseeUser: users })
@@ -112,13 +107,13 @@ export class FriendshipRepository {
     query: string,
     viewerId: string,
     limit: number,
-    cursor?: { displayName: string; id: string },
+    cursor?: { displayName: string; id: string }
   ): Promise<{ users: FriendUserRow[]; friendships: FriendshipRow[] }> {
     const pattern = `%${query.toLowerCase()}%`;
 
     const baseWhere = and(
       sql`(LOWER(${users.username}) ILIKE ${pattern} OR LOWER(${users.displayName}) ILIKE ${pattern})`,
-      ne(users.id, viewerId),
+      ne(users.id, viewerId)
     );
 
     const whereWithCursor = cursor
@@ -128,9 +123,9 @@ export class FriendshipRepository {
             sql`LOWER(${users.displayName}) > ${cursor.displayName.toLowerCase()}`,
             and(
               sql`LOWER(${users.displayName}) = ${cursor.displayName.toLowerCase()}`,
-              sql`${users.id} > ${cursor.id}`,
-            ),
-          ),
+              sql`${users.id} > ${cursor.id}`
+            )
+          )
         )
       : baseWhere;
 
@@ -152,8 +147,8 @@ export class FriendshipRepository {
       .where(
         and(
           or(eq(friendships.requesterId, viewerId), eq(friendships.addresseeId, viewerId)),
-          or(inArray(friendships.requesterId, userIds), inArray(friendships.addresseeId, userIds)),
-        ),
+          or(inArray(friendships.requesterId, userIds), inArray(friendships.addresseeId, userIds))
+        )
       );
 
     return { users: foundUsers, friendships: friendshipRows };

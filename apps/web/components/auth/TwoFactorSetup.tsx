@@ -22,7 +22,10 @@ export function TwoFactorSetup({ onSuccess }: TwoFactorSetupProps) {
   const [backupCopied, setBackupCopied] = useState(false);
 
   async function handleStartSetup() {
-    if (!password) { setError('Digite sua senha para continuar'); return; }
+    if (!password) {
+      setError('Digite sua senha para continuar');
+      return;
+    }
     setIsLoading(true);
     setError('');
     try {
@@ -31,7 +34,10 @@ export function TwoFactorSetup({ onSuccess }: TwoFactorSetupProps) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password }),
       });
-      if (!res.ok) { const d = await res.json(); throw new Error(d.error || 'Erro ao configurar 2FA'); }
+      if (!res.ok) {
+        const d = await res.json();
+        throw new Error(d.error || 'Erro ao configurar 2FA');
+      }
       const data: SetupData = await res.json();
       setSetupData(data);
       setStep('qr');
@@ -43,7 +49,10 @@ export function TwoFactorSetup({ onSuccess }: TwoFactorSetupProps) {
   }
 
   async function handleVerifyTotp() {
-    if (totpCode.length !== 6) { setError('Digite o codigo de 6 digitos'); return; }
+    if (totpCode.length !== 6) {
+      setError('Digite o codigo de 6 digitos');
+      return;
+    }
     setIsLoading(true);
     setError('');
     try {
@@ -82,6 +91,7 @@ export function TwoFactorSetup({ onSuccess }: TwoFactorSetupProps) {
         />
         {error && <p className="text-sm text-red-600">{error}</p>}
         <button
+          type="button"
           onClick={handleStartSetup}
           disabled={isLoading}
           className="w-full rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700 disabled:opacity-60"
@@ -100,14 +110,27 @@ export function TwoFactorSetup({ onSuccess }: TwoFactorSetupProps) {
           Escaneie o QR code com seu app autenticador (Google Authenticator, Authy, etc.):
         </p>
         <div className="flex justify-center">
-          <img src={setupData.qrCodeDataUrl} alt="QR Code 2FA" className="rounded-lg border border-gray-200 p-2" width={200} height={200} />
+          {/* biome-ignore lint/performance/noImgElement: OG route uses @vercel/og ImageResponse which requires plain <img>, not next/image */}
+          <img
+            src={setupData.qrCodeDataUrl}
+            alt="QR Code 2FA"
+            className="rounded-lg border border-gray-200 p-2"
+            width={200}
+            height={200}
+          />
         </div>
         <details className="text-sm">
-          <summary className="cursor-pointer text-violet-600">Nao consigo escanear — mostrar codigo manual</summary>
-          <code className="mt-2 block break-all rounded bg-gray-100 p-2 font-mono text-xs">{manualCode}</code>
+          <summary className="cursor-pointer text-violet-600">
+            Nao consigo escanear — mostrar codigo manual
+          </summary>
+          <code className="mt-2 block break-all rounded bg-gray-100 p-2 font-mono text-xs">
+            {manualCode}
+          </code>
         </details>
         <div className="space-y-2">
-          <label htmlFor="totp-code-setup" className="text-sm font-medium text-gray-700">Codigo do app (6 digitos):</label>
+          <label htmlFor="totp-code-setup" className="text-sm font-medium text-gray-700">
+            Codigo do app (6 digitos):
+          </label>
           <input
             id="totp-code-setup"
             type="text"
@@ -122,6 +145,7 @@ export function TwoFactorSetup({ onSuccess }: TwoFactorSetupProps) {
         </div>
         {error && <p className="text-sm text-red-600">{error}</p>}
         <button
+          type="button"
           onClick={handleVerifyTotp}
           disabled={isLoading || totpCode.length !== 6}
           className="w-full rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700 disabled:opacity-60"
@@ -136,23 +160,30 @@ export function TwoFactorSetup({ onSuccess }: TwoFactorSetupProps) {
     return (
       <div className="space-y-4">
         <div className="rounded-lg bg-amber-50 border border-amber-200 p-4">
-          <p className="text-sm font-medium text-amber-800">Salve estes codigos de recuperacao agora!</p>
-          <p className="text-xs text-amber-700 mt-1">Eles nao serao mostrados novamente. Use-os se perder acesso ao seu app autenticador.</p>
+          <p className="text-sm font-medium text-amber-800">
+            Salve estes codigos de recuperacao agora!
+          </p>
+          <p className="text-xs text-amber-700 mt-1">
+            Eles nao serao mostrados novamente. Use-os se perder acesso ao seu app autenticador.
+          </p>
         </div>
         <div className="grid grid-cols-2 gap-2">
           {setupData.backupCodes.map((code, i) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: static backup codes list — order never changes
             <code key={i} className="rounded bg-gray-100 px-3 py-1.5 font-mono text-sm text-center">
               {code}
             </code>
           ))}
         </div>
         <button
+          type="button"
           onClick={handleCopyBackupCodes}
           className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
         >
           {backupCopied ? 'Copiado!' : 'Copiar todos os codigos'}
         </button>
         <button
+          type="button"
           onClick={() => onSuccess?.()}
           className="w-full rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700"
         >

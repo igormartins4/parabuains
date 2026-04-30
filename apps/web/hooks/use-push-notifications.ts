@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 function urlBase64ToUint8Array(base64String: string): Uint8Array {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
@@ -20,9 +20,7 @@ export interface UsePushNotificationsResult {
 
 export function usePushNotifications(): UsePushNotificationsResult {
   const isSupported =
-    typeof window !== 'undefined' &&
-    'serviceWorker' in navigator &&
-    'PushManager' in window;
+    typeof window !== 'undefined' && 'serviceWorker' in navigator && 'PushManager' in window;
 
   const [permission, setPermission] = useState<NotificationPermission>('default');
   const [isSubscribed, setIsSubscribed] = useState(false);
@@ -49,7 +47,7 @@ export function usePushNotifications(): UsePushNotificationsResult {
       const reg = await navigator.serviceWorker.register('/sw.js');
 
       // Subscribe to push
-      const vapidKey = process.env['NEXT_PUBLIC_VAPID_PUBLIC_KEY'];
+      const vapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
       if (!vapidKey) throw new Error('VAPID public key not configured');
 
       const subscription = await reg.pushManager.subscribe({
@@ -60,8 +58,8 @@ export function usePushNotifications(): UsePushNotificationsResult {
       setPermission(Notification.permission);
 
       const json = subscription.toJSON();
-      const p256dh = json.keys?.['p256dh'];
-      const auth = json.keys?.['auth'];
+      const p256dh = json.keys?.p256dh;
+      const auth = json.keys?.auth;
 
       if (!p256dh || !auth) throw new Error('Invalid push subscription keys');
 

@@ -1,14 +1,14 @@
 import type { FastifyInstance } from 'fastify';
-import { UserService } from './user.service.js';
+import { AppError } from '../../errors.js';
+import { require2FAIfEnabled } from '../audit/totp-enforcement.js';
 import { UserRepository } from './user.repository.js';
 import {
   getProfileParamsSchema,
+  mutualFriendsParamsSchema,
   updateProfileSchema,
   usernameChangeSchema,
-  mutualFriendsParamsSchema,
 } from './user.schemas.js';
-import { AppError } from '../../errors.js';
-import { require2FAIfEnabled } from '../audit/totp-enforcement.js';
+import { UserService } from './user.service.js';
 
 export async function userRoutes(fastify: FastifyInstance) {
   const repo = new UserRepository();
@@ -25,16 +25,12 @@ export async function userRoutes(fastify: FastifyInstance) {
   });
 
   // GET /v1/users/:username — public profile (respects privacy)
-  fastify.get(
-    '/users/:username',
-    { config: { skipAuth: true } },
-    async (request, reply) => {
-      const { username } = getProfileParamsSchema.parse(request.params);
-      const viewerId = request.userId ?? undefined;
-      const profile = await service.getProfile(username, viewerId);
-      return reply.send(profile);
-    },
-  );
+  fastify.get('/users/:username', { config: { skipAuth: true } }, async (request, reply) => {
+    const { username } = getProfileParamsSchema.parse(request.params);
+    const viewerId = request.userId ?? undefined;
+    const profile = await service.getProfile(username, viewerId);
+    return reply.send(profile);
+  });
 
   // PUT /v1/users/me/profile — update own profile (auth required)
   fastify.put('/users/me/profile', async (request, reply) => {
@@ -56,7 +52,7 @@ export async function userRoutes(fastify: FastifyInstance) {
     // 2FA enforcement: require X-2FA-Verified header if 2FA is enabled
     await require2FAIfEnabled(
       request.userId,
-      request.headers['x-2fa-verified'] as string | undefined,
+      request.headers['x-2fa-verified'] as string | undefined
     );
     request.auditAction = 'user.username_change';
     request.auditResource = `user:${request.userId}`;

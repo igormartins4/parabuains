@@ -1,25 +1,28 @@
 import type { FastifyInstance } from 'fastify';
-import { FriendshipService } from './friendship.service.js';
-import { FriendshipRepository } from './friendship.repository.js';
-import {
-  sendRequestSchema,
-  friendshipIdParamsSchema,
-  targetUserIdParamsSchema,
-  searchQuerySchema,
-} from './friendship.schemas.js';
 import { AppError } from '../../errors.js';
-import { notificationsQueue, type FriendshipAcceptedJob } from '../../queues/notifications.queue.js';
+import { getRedis } from '../../infrastructure/redis.js';
 import { publishUserEvent } from '../../lib/redis-pub.js';
+import {
+  type FriendshipAcceptedJob,
+  notificationsQueue,
+} from '../../queues/notifications.queue.js';
 import { AnomalyDetectionService } from '../anomaly/anomaly-detection.service.js';
 import { AuditRepository } from '../audit/audit.repository.js';
-import { getRedis } from '../../infrastructure/redis.js';
+import { FriendshipRepository } from './friendship.repository.js';
+import {
+  friendshipIdParamsSchema,
+  searchQuerySchema,
+  sendRequestSchema,
+  targetUserIdParamsSchema,
+} from './friendship.schemas.js';
+import { FriendshipService } from './friendship.service.js';
 
 export async function friendshipRoutes(fastify: FastifyInstance) {
   const repo = new FriendshipRepository();
   const service = new FriendshipService(repo);
   // Anomaly detection — only connect Redis in non-test env
   const anomalyService =
-    process.env['NODE_ENV'] !== 'test'
+    process.env.NODE_ENV !== 'test'
       ? new AnomalyDetectionService(getRedis(), new AuditRepository())
       : null;
 
@@ -40,25 +43,25 @@ export async function friendshipRoutes(fastify: FastifyInstance) {
         rateLimit: {
           max: 30,
           timeWindow: 3600 * 1000,
-          keyGenerator: (req) =>
-            (req as typeof req & { userId?: string | null }).userId ?? req.ip,
+          keyGenerator: (req) => (req as typeof req & { userId?: string | null }).userId ?? req.ip,
         },
       },
     },
     async (request, reply) => {
-    if (!request.userId) {
-      return reply.code(401).send({ error: 'UNAUTHORIZED', message: 'Authentication required' });
+      if (!request.userId) {
+        return reply.code(401).send({ error: 'UNAUTHORIZED', message: 'Authentication required' });
+      }
+      const body = sendRequestSchema.parse(request.body);
+      request.auditAction = 'friendship.create';
+      request.auditResource = `user:${body.addresseeId}`;
+      // Anomaly detection: check friendship flood
+      if (anomalyService) {
+        await anomalyService.checkFriendshipFlood(request.userId);
+      }
+      const result = await service.sendRequest(request.userId, body.addresseeId);
+      return reply.status(201).send(result);
     }
-    const body = sendRequestSchema.parse(request.body);
-    request.auditAction = 'friendship.create';
-    request.auditResource = `user:${body.addresseeId}`;
-    // Anomaly detection: check friendship flood
-    if (anomalyService) {
-      await anomalyService.checkFriendshipFlood(request.userId);
-    }
-    const result = await service.sendRequest(request.userId, body.addresseeId);
-    return reply.status(201).send(result);
-  });
+  );
 
   // GET /friendships — listar amigos aceitos
   fastify.get('/friendships', async (request, reply) => {

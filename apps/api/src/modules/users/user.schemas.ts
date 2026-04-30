@@ -4,7 +4,7 @@ export const usernameSchema = z
   .string()
   .regex(
     /^[a-z0-9_-]{3,30}$/,
-    'Username must be 3-30 chars, lowercase letters, digits, underscore or hyphen',
+    'Username must be 3-30 chars, lowercase letters, digits, underscore or hyphen'
   );
 
 const RESERVED_USERNAMES = new Set([
@@ -23,7 +23,7 @@ const RESERVED_USERNAMES = new Set([
 export const usernameChangeSchema = z.object({
   username: usernameSchema.refine(
     (val) => !RESERVED_USERNAMES.has(val),
-    'This username is reserved',
+    'This username is reserved'
   ),
 });
 
@@ -64,7 +64,7 @@ export const mutualFriendsResponseSchema = z.object({
       username: z.string(),
       displayName: z.string(),
       avatarUrl: z.string().url().nullable(),
-    }),
+    })
   ),
 });
 

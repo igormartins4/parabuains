@@ -1,10 +1,5 @@
-import { type NextRequest } from 'next/server';
+import type { NextRequest } from 'next/server';
 import { bffProxy } from '@/lib/bff';
 
-export const DELETE = (
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-) =>
-  params.then(({ id }) =>
-    bffProxy(req, `/v1/friendships/${id}`, { method: 'DELETE' }),
-  );
+export const DELETE = (req: NextRequest, { params }: { params: Promise<{ id: string }> }) =>
+  params.then(({ id }) => bffProxy(req, `/v1/friendships/${id}`, { method: 'DELETE' }));

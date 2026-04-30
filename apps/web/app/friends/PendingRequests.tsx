@@ -1,11 +1,11 @@
 'use client';
-import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import {
-  getPendingRequests,
   acceptFriendRequest,
   declineOrRemoveFriendship,
+  getPendingRequests,
 } from '@/lib/api/friendships';
 
 interface RequesterUser {
@@ -27,9 +27,8 @@ export function PendingRequests() {
 
   useEffect(() => {
     getPendingRequests()
-      .then((data: { requests?: PendingRequest[] }) =>
-        setRequests(data.requests ?? []),
-      )
+      .then((data: { requests?: PendingRequest[] }) => setRequests(data.requests ?? []))
+      // biome-ignore lint/suspicious/noConsole: intentional error logging in catch handler
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
@@ -47,11 +46,7 @@ export function PendingRequests() {
   if (loading) return <div className="h-32 bg-neutral-100 rounded-xl animate-pulse" />;
 
   if (requests.length === 0) {
-    return (
-      <p className="text-center text-neutral-500 py-8">
-        Nenhum pedido de amizade pendente.
-      </p>
-    );
+    return <p className="text-center text-neutral-500 py-8">Nenhum pedido de amizade pendente.</p>;
   }
 
   return (
@@ -87,12 +82,14 @@ export function PendingRequests() {
           </div>
           <div className="flex gap-2 shrink-0">
             <button
+              type="button"
               onClick={() => void handleAccept(req.id)}
               className="px-3 py-1.5 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
               Aceitar
             </button>
             <button
+              type="button"
               onClick={() => void handleDecline(req.id)}
               className="px-3 py-1.5 text-sm font-medium bg-neutral-100 text-neutral-700 rounded-lg hover:bg-neutral-200 transition-colors"
             >

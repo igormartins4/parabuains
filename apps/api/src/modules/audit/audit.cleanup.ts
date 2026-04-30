@@ -14,7 +14,7 @@ export interface CleanupAuditLogsResult {
  */
 export async function cleanupAuditLogs(
   logFn: (msg: string) => void,
-  auditRepo: AuditRepository,
+  auditRepo: AuditRepository
 ): Promise<CleanupAuditLogsResult> {
   const cutoff = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000);
 
@@ -60,7 +60,7 @@ export async function registerAuditCleanupScheduler(): Promise<void> {
   await queue.upsertJobScheduler(
     CLEANUP_AUDIT_JOB_NAME,
     { pattern: '0 3 * * *' }, // 03:00 UTC diariamente
-    { name: CLEANUP_AUDIT_JOB_NAME, data: {} },
+    { name: CLEANUP_AUDIT_JOB_NAME, data: {} }
   );
 }
 
@@ -73,16 +73,13 @@ export function startMaintenanceWorker(): Worker {
     'maintenance',
     async (job) => {
       if (job.name === CLEANUP_AUDIT_JOB_NAME) {
-        const result = await cleanupAuditLogs(
-          (msg) => void job.log(msg),
-          auditRepo,
-        );
+        const result = await cleanupAuditLogs((msg) => void job.log(msg), auditRepo);
         console.info(`[AuditCleanup] Cleanup complete: ${result.deleted} rows deleted`);
         return result;
       }
       return undefined;
     },
-    { connection: getRedis(), concurrency: 1 },
+    { connection: getRedis(), concurrency: 1 }
   );
 
   _maintenanceWorker.on('failed', (job, err) => {

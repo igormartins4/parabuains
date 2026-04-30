@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { MessageService, sanitizeMessage } from '../message.service.js';
 import type { IMessageRepository, WallMessage } from '../message.types.js';
 
@@ -200,9 +200,7 @@ describe('MessageService.postMessage — approval flow', () => {
       type: 'public',
     });
 
-    expect(mockRepo.create).toHaveBeenCalledWith(
-      expect.objectContaining({ status: 'pending' }),
-    );
+    expect(mockRepo.create).toHaveBeenCalledWith(expect.objectContaining({ status: 'pending' }));
     // Notificacao NAO deve ser enfileirada para mensagens pendentes
     expect(mockQueue.add).not.toHaveBeenCalled();
     expect(result.status).toBe('pending');
@@ -232,12 +230,10 @@ describe('MessageService.postMessage — approval flow', () => {
       type: 'public',
     });
 
-    expect(mockRepo.create).toHaveBeenCalledWith(
-      expect.objectContaining({ status: 'published' }),
-    );
+    expect(mockRepo.create).toHaveBeenCalledWith(expect.objectContaining({ status: 'published' }));
     expect(mockQueue.add).toHaveBeenCalledWith(
       'wall.message_posted',
-      expect.objectContaining({ type: 'wall.message_posted' }),
+      expect.objectContaining({ type: 'wall.message_posted' })
     );
   });
 
@@ -267,7 +263,7 @@ describe('MessageService.postMessage — approval flow', () => {
       expect.objectContaining({
         type: 'wall.message_posted',
         messageId: 'msg-approve',
-      }),
+      })
     );
   });
 });
@@ -373,7 +369,7 @@ describe('MessageService.postMessage — validacoes de seguranca', () => {
         authorId: 'author-uuid',
         content: 'Mensagem anonima tentativa',
         type: 'anonymous',
-      }),
+      })
     ).rejects.toMatchObject({ statusCode: 400 });
   });
 
@@ -403,7 +399,7 @@ describe('MessageService.postMessage — validacoes de seguranca', () => {
     expect(createMock).toHaveBeenCalledWith(
       expect.objectContaining({
         content: 'Parabens!',
-      }),
+      })
     );
   });
 
@@ -417,7 +413,7 @@ describe('MessageService.postMessage — validacoes de seguranca', () => {
         authorId: 'author-uuid',
         content: '<script>alert(1)</script>',
         type: 'public',
-      }),
+      })
     ).rejects.toMatchObject({ statusCode: 400 });
   });
 });
@@ -464,9 +460,9 @@ describe('MessageService.deleteMessage — authorization', () => {
     });
     const service = new MessageService(mockRepo, createMockQueue() as any);
 
-    await expect(
-      service.deleteMessage('msg-anon-del', 'anon-author-uuid'),
-    ).rejects.toMatchObject({ statusCode: 403 });
+    await expect(service.deleteMessage('msg-anon-del', 'anon-author-uuid')).rejects.toMatchObject({
+      statusCode: 403,
+    });
   });
 
   it('retorna 404 para mensagem ja deletada', async () => {
@@ -486,8 +482,8 @@ describe('MessageService.deleteMessage — authorization', () => {
     });
     const service = new MessageService(mockRepo, createMockQueue() as any);
 
-    await expect(
-      service.deleteMessage('msg-already-deleted', 'owner-uuid'),
-    ).rejects.toMatchObject({ statusCode: 404 });
+    await expect(service.deleteMessage('msg-already-deleted', 'owner-uuid')).rejects.toMatchObject({
+      statusCode: 404,
+    });
   });
 });

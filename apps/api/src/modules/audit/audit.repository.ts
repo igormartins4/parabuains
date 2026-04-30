@@ -1,6 +1,6 @@
-import { lt, eq, desc, and, gte } from 'drizzle-orm';
-import { getDb } from '../../infrastructure/db.js';
 import { auditLogs } from '@parabuains/db';
+import { and, desc, eq, gte, lt } from 'drizzle-orm';
+import { getDb } from '../../infrastructure/db.js';
 
 export interface AuditInsertParams {
   actorId?: string | null;
@@ -29,28 +29,18 @@ export class AuditRepository {
 
   /** Deleta registros anteriores a `cutoff`. Retorna número de rows deletadas. */
   async deleteBefore(cutoff: Date): Promise<number> {
-    const result = await this.db
-      .delete(auditLogs)
-      .where(lt(auditLogs.createdAt, cutoff));
+    const result = await this.db.delete(auditLogs).where(lt(auditLogs.createdAt, cutoff));
     return result.rowCount ?? 0;
   }
 
   /** Busca audit logs de um actor específico (últimos 90 dias), paginado. */
-  async findByActor(
-    actorId: string,
-    options: { limit?: number; offset?: number } = {},
-  ) {
+  async findByActor(actorId: string, options: { limit?: number; offset?: number } = {}) {
     const { limit = 50, offset = 0 } = options;
     const ninetyDaysAgo = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000);
     return this.db
       .select()
       .from(auditLogs)
-      .where(
-        and(
-          eq(auditLogs.actorId, actorId),
-          gte(auditLogs.createdAt, ninetyDaysAgo),
-        ),
-      )
+      .where(and(eq(auditLogs.actorId, actorId), gte(auditLogs.createdAt, ninetyDaysAgo)))
       .orderBy(desc(auditLogs.createdAt))
       .limit(limit)
       .offset(offset);

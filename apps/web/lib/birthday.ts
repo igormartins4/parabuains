@@ -55,9 +55,7 @@ export function formatBirthday(birthday: string, locale = 'pt-BR'): string {
     day = parseInt(parts[2], 10);
   }
 
-  const date = year
-    ? new Date(year, month - 1, day)
-    : new Date(2000, month - 1, day); // placeholder year for formatting
+  const date = year ? new Date(year, month - 1, day) : new Date(2000, month - 1, day); // placeholder year for formatting
 
   const options: Intl.DateTimeFormatOptions = year
     ? { day: 'numeric', month: 'long', year: 'numeric' }

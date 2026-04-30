@@ -1,12 +1,12 @@
-import { redirect } from 'next/navigation';
 import type { Metadata } from 'next';
-import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
-import { createServiceToken } from '@/lib/service-token';
-import { UsernameForm } from '@/components/settings/UsernameForm';
-import { PrivacySettings } from '@/components/settings/PrivacySettings';
-import { BirthYearToggle } from '@/components/settings/BirthYearToggle';
+import { redirect } from 'next/navigation';
 import { AvatarUpload } from '@/components/settings/AvatarUpload';
+import { BirthYearToggle } from '@/components/settings/BirthYearToggle';
+import { PrivacySettings } from '@/components/settings/PrivacySettings';
+import { UsernameForm } from '@/components/settings/UsernameForm';
+import { auth } from '@/lib/auth';
+import { createServiceToken } from '@/lib/service-token';
 import { updateProfileAction } from './actions';
 
 export const metadata: Metadata = {
@@ -27,7 +27,7 @@ async function fetchCurrentProfile(serviceToken: string) {
     {
       headers: { Authorization: `Bearer ${serviceToken}` },
       cache: 'no-store',
-    },
+    }
   );
   if (!res.ok) return null;
   return res.json();
@@ -55,10 +55,7 @@ export default async function ProfileSettingsPage() {
         {/* Avatar */}
         <section className="bg-white rounded-xl border border-gray-200 p-6">
           <h2 className="text-base font-semibold text-gray-900 mb-4">Foto de perfil</h2>
-          <AvatarUpload
-            currentAvatarUrl={profile.avatarUrl}
-            displayName={profile.displayName}
-          />
+          <AvatarUpload currentAvatarUrl={profile.avatarUrl} displayName={profile.displayName} />
         </section>
 
         {/* Basic info */}
@@ -67,10 +64,7 @@ export default async function ProfileSettingsPage() {
           {/* @ts-expect-error Server Action returns data but Next.js handles it correctly */}
           <form action={updateProfileAction} className="space-y-4">
             <div>
-              <label
-                htmlFor="displayName"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
+              <label htmlFor="displayName" className="block text-sm font-medium text-gray-700 mb-1">
                 Nome de exibição
               </label>
               <input

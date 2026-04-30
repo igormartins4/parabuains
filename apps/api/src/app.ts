@@ -1,20 +1,20 @@
 import Fastify from 'fastify';
-import helmetPlugin from './plugins/helmet.js';
-import corsPlugin from './plugins/cors.js';
-import rateLimitPlugin from './plugins/rate-limit.js';
-import jwtPlugin from './plugins/jwt.js';
-import authPlugin from './plugins/auth.js';
-import swaggerPlugin from './plugins/swagger.js';
-import sensiblePlugin from './plugins/sensible.js';
-import { auditPlugin } from './plugins/audit.js';
-import { healthRoutes } from './modules/health/routes.js';
-import { usersPlugin } from './modules/users/user.plugin.js';
-import { friendshipsPlugin } from './modules/friendships/friendship.plugin.js';
+import { auditModulePlugin } from './modules/audit/audit.plugin.js';
 import { feedPlugin } from './modules/feed/feed.plugin.js';
-import { ssePlugin } from './modules/notifications/sse.plugin.js';
+import { friendshipsPlugin } from './modules/friendships/friendship.plugin.js';
+import { healthRoutes } from './modules/health/routes.js';
 import { messagesPlugin } from './modules/messages/message.plugin.js';
 import { notificationPlugin } from './modules/notifications/notification.plugin.js';
-import { auditModulePlugin } from './modules/audit/audit.plugin.js';
+import { ssePlugin } from './modules/notifications/sse.plugin.js';
+import { usersPlugin } from './modules/users/user.plugin.js';
+import { auditPlugin } from './plugins/audit.js';
+import authPlugin from './plugins/auth.js';
+import corsPlugin from './plugins/cors.js';
+import helmetPlugin from './plugins/helmet.js';
+import jwtPlugin from './plugins/jwt.js';
+import rateLimitPlugin from './plugins/rate-limit.js';
+import sensiblePlugin from './plugins/sensible.js';
+import swaggerPlugin from './plugins/swagger.js';
 
 export async function buildApp() {
   const app = Fastify({

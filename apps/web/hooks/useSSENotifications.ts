@@ -8,10 +8,7 @@ export interface SSEEvent {
   [key: string]: unknown;
 }
 
-export function useSSENotifications(
-  onEvent: (event: SSEEvent) => void,
-  enabled = true,
-) {
+export function useSSENotifications(onEvent: (event: SSEEvent) => void, enabled = true) {
   // Use a ref so we don't need to list onEvent in deps (avoids infinite loops
   // when callers pass an inline function)
   const onEventRef = useRef(onEvent);

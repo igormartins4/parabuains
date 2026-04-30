@@ -1,5 +1,5 @@
-import { NotFoundError, ConflictError } from '../../errors.js';
-import { UserRepository } from './user.repository.js';
+import { ConflictError, NotFoundError } from '../../errors.js';
+import type { UserRepository } from './user.repository.js';
 import type { UpdateProfileInput, UsernameChangeInput } from './user.schemas.js';
 
 type UserRow = {

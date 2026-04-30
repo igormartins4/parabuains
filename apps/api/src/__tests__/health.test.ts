@@ -1,12 +1,12 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { buildApp } from '../app.js';
 import type { FastifyInstance } from 'fastify';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { buildApp } from '../app.js';
 
 // Mock environment variables for test
-process.env['DATABASE_URL'] = 'postgresql://test:test@localhost:5432/test';
-process.env['REDIS_URL'] = 'redis://localhost:6379';
-process.env['API_JWT_SECRET'] = 'test-secret-minimum-32-chars-long!!';
-process.env['NODE_ENV'] = 'test';
+process.env.DATABASE_URL = 'postgresql://test:test@localhost:5432/test';
+process.env.REDIS_URL = 'redis://localhost:6379';
+process.env.API_JWT_SECRET = 'test-secret-minimum-32-chars-long!!';
+process.env.NODE_ENV = 'test';
 
 describe('Health route', () => {
   let app: FastifyInstance;

@@ -1,4 +1,4 @@
-import { resend, FROM_EMAIL } from './resend';
+import { FROM_EMAIL, resend } from './resend';
 
 interface VerificationEmailParams {
   to: string;
@@ -30,7 +30,6 @@ export async function sendVerificationEmail({ to, url }: VerificationEmailParams
   });
 
   if (error) {
-    console.error('[Email] sendVerificationEmail failed:', error);
     throw new Error(`Failed to send verification email: ${error.message}`);
   }
 }
@@ -55,7 +54,6 @@ export async function sendPasswordResetEmail({ to, url }: PasswordResetEmailPara
   });
 
   if (error) {
-    console.error('[Email] sendPasswordResetEmail failed:', error);
     throw new Error(`Failed to send password reset email: ${error.message}`);
   }
 }

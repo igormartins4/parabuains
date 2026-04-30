@@ -1,7 +1,7 @@
+import { type NextRequest, NextResponse } from 'next/server';
+import QRCode from 'qrcode';
 import { auth } from '@/lib/auth';
 import { generateBackupCodes, storeBackupCodes } from '@/lib/totp-backup';
-import { NextRequest, NextResponse } from 'next/server';
-import QRCode from 'qrcode';
 
 export async function POST(request: NextRequest) {
   const session = await auth.api.getSession({ headers: request.headers });
@@ -28,8 +28,7 @@ export async function POST(request: NextRequest) {
       qrCodeDataUrl,
       backupCodes: plainCodes,
     });
-  } catch (error) {
-    console.error('[2FA Setup] Error:', error);
+  } catch (_error) {
     return NextResponse.json({ error: 'Failed to setup 2FA' }, { status: 500 });
   }
 }

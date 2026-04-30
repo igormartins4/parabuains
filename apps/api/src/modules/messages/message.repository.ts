@@ -1,12 +1,12 @@
-import { eq, and, isNull, desc, sql } from 'drizzle-orm';
+import { friendships, messageReports, users, wallMessages } from '@parabuains/db';
+import { and, desc, eq, isNull, sql } from 'drizzle-orm';
 import { getDb } from '../../infrastructure/db.js';
-import { wallMessages, messageReports, users, friendships } from '@parabuains/db';
 import type {
   IMessageRepository,
+  MessageStatus,
+  UserWallProfile,
   WallMessage,
   WallSettings,
-  UserWallProfile,
-  MessageStatus,
 } from './message.types.js';
 
 export class DrizzleMessageRepository implements IMessageRepository {
@@ -16,7 +16,7 @@ export class DrizzleMessageRepository implements IMessageRepository {
 
   async findWallMessages(
     profileId: string,
-    viewerRelation: 'owner' | 'author' | 'public',
+    viewerRelation: 'owner' | 'author' | 'public'
   ): Promise<WallMessage[]> {
     const baseConditions = [
       eq(wallMessages.profileId, profileId),
@@ -46,18 +46,12 @@ export class DrizzleMessageRepository implements IMessageRepository {
     isPrivate: boolean;
     status: MessageStatus;
   }): Promise<WallMessage> {
-    const [msg] = await this.db
-      .insert(wallMessages)
-      .values(input)
-      .returning();
+    const [msg] = await this.db.insert(wallMessages).values(input).returning();
     return msg as WallMessage;
   }
 
   async findById(id: string): Promise<WallMessage | null> {
-    const [msg] = await this.db
-      .select()
-      .from(wallMessages)
-      .where(eq(wallMessages.id, id));
+    const [msg] = await this.db.select().from(wallMessages).where(eq(wallMessages.id, id));
     return (msg as WallMessage) ?? null;
   }
 
@@ -100,8 +94,8 @@ export class DrizzleMessageRepository implements IMessageRepository {
         and(
           eq(wallMessages.profileId, profileId),
           eq(wallMessages.status, 'pending'),
-          isNull(wallMessages.deletedAt),
-        ),
+          isNull(wallMessages.deletedAt)
+        )
       )
       .orderBy(desc(wallMessages.createdAt));
     return rows as WallMessage[];
@@ -154,8 +148,8 @@ export class DrizzleMessageRepository implements IMessageRepository {
             (${friendships.requesterId} = ${userId} AND ${friendships.addresseeId} = ${targetId})
             OR
             (${friendships.requesterId} = ${targetId} AND ${friendships.addresseeId} = ${userId})
-          )`,
-        ),
+          )`
+        )
       );
     return rows.length > 0;
   }

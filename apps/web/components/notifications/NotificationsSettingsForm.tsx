@@ -35,7 +35,11 @@ export function NotificationsSettingsForm({ initialPreferences }: NotificationsS
   const [saveError, setSaveError] = useState<string | null>(null);
   const [showPushModal, setShowPushModal] = useState(false);
 
-  const { isSupported: pushSupported, isSubscribed: pushSubscribed, permission } = usePushNotifications();
+  const {
+    isSupported: pushSupported,
+    isSubscribed: pushSubscribed,
+    permission,
+  } = usePushNotifications();
 
   async function savePreference(channel: 'email' | 'push', daysBefore: number[], enabled: boolean) {
     setIsSaving(true);
@@ -150,6 +154,7 @@ export function NotificationsSettingsForm({ initialPreferences }: NotificationsS
                 </span>
               ) : (
                 <button
+                  type="button"
                   onClick={() => setShowPushModal(true)}
                   className="text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-colors"
                 >

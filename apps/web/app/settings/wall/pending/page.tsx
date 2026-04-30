@@ -1,8 +1,8 @@
-import { redirect } from 'next/navigation';
 import type { Metadata } from 'next';
-import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
 import { getPendingMessages } from '@/lib/api/messages';
+import { auth } from '@/lib/auth';
 import { PendingMessagesClient } from './PendingMessagesClient';
 
 export const metadata: Metadata = { title: 'Aprovação de Mensagens — Parabuains' };

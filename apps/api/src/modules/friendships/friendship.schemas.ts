@@ -18,7 +18,12 @@ export const searchQuerySchema = z.object({
   cursor: z.string().optional(),
 });
 
-export const friendshipStatusSchema = z.enum(['none', 'pending_sent', 'pending_received', 'accepted']);
+export const friendshipStatusSchema = z.enum([
+  'none',
+  'pending_sent',
+  'pending_received',
+  'accepted',
+]);
 
 // Response shapes
 export const friendshipResponseSchema = z.object({

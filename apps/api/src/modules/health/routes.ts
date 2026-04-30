@@ -1,7 +1,7 @@
+import { sql } from 'drizzle-orm';
 import type { FastifyInstance } from 'fastify';
 import { db } from '../../infrastructure/db.js';
 import { redis } from '../../infrastructure/redis.js';
-import { sql } from 'drizzle-orm';
 
 export async function healthRoutes(app: FastifyInstance) {
   app.get(
@@ -39,12 +39,12 @@ export async function healthRoutes(app: FastifyInstance) {
       }
 
       const allHealthy = dbStatus === 'connected' && redisStatus === 'connected';
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return (reply as any).code(allHealthy ? 200 : 503).send({
+      reply.code(allHealthy ? 200 : 503);
+      return {
         status: allHealthy ? 'ok' : 'degraded',
         db: dbStatus,
         redis: redisStatus,
-      });
-    },
+      };
+    }
   );
 }

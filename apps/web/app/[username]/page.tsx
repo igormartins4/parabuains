@@ -1,19 +1,16 @@
-import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import Image from 'next/image';
-import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
-import { createServiceToken } from '@/lib/service-token';
-import {
-  BirthdayCountdown,
-  BirthdayCountdownHidden,
-} from '@/components/profile/BirthdayCountdown';
-import { ShareButton } from '@/components/profile/ShareButton';
+import Image from 'next/image';
+import { notFound } from 'next/navigation';
+import { BirthdayCountdown, BirthdayCountdownHidden } from '@/components/profile/BirthdayCountdown';
 import { MutualFriends } from '@/components/profile/MutualFriends';
-import { FriendshipButton } from './FriendshipButton';
+import { ShareButton } from '@/components/profile/ShareButton';
 import type { FriendshipStatus } from '@/lib/api/friendships';
-import { WallSection } from './WallSection';
 import { getWallMessages } from '@/lib/api/messages';
+import { auth } from '@/lib/auth';
+import { createServiceToken } from '@/lib/service-token';
+import { FriendshipButton } from './FriendshipButton';
+import { WallSection } from './WallSection';
 
 // ISR: revalidate profile page every 1 hour
 export const revalidate = 3600;
@@ -25,12 +22,12 @@ interface ProfilePageProps {
 async function fetchProfile(username: string, serviceToken?: string) {
   const reqHeaders: HeadersInit = { 'Content-Type': 'application/json' };
   if (serviceToken) {
-    reqHeaders['Authorization'] = `Bearer ${serviceToken}`;
+    reqHeaders.Authorization = `Bearer ${serviceToken}`;
   }
 
   const res = await fetch(
     `${process.env.INTERNAL_API_URL}/v1/users/${encodeURIComponent(username)}`,
-    { headers: reqHeaders, next: { revalidate: 60 } },
+    { headers: reqHeaders, next: { revalidate: 60 } }
   );
 
   if (res.status === 404 || res.status === 410) return null;
@@ -40,14 +37,14 @@ async function fetchProfile(username: string, serviceToken?: string) {
 
 async function fetchFriendshipStatus(
   profileId: string,
-  serviceToken: string,
+  serviceToken: string
 ): Promise<{ status: FriendshipStatus; friendshipId?: string }> {
   const res = await fetch(
     `${process.env.INTERNAL_API_URL}/v1/friendships/status/${encodeURIComponent(profileId)}`,
     {
       headers: { Authorization: `Bearer ${serviceToken}` },
       next: { revalidate: 0 },
-    },
+    }
   );
   if (!res.ok) return { status: 'none' };
   return res.json() as Promise<{ status: FriendshipStatus; friendshipId?: string }>;
@@ -59,7 +56,7 @@ async function fetchMutualFriends(username: string, serviceToken: string) {
     {
       headers: { Authorization: `Bearer ${serviceToken}` },
       next: { revalidate: 300 },
-    },
+    }
   );
   if (!res.ok) return { count: 0, sample: [] };
   return res.json();
@@ -124,8 +121,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
   const wallMessages = await getWallMessages(username).catch(() => []);
 
   // Determine if current user can post on this wall (server-side pre-computation)
-  const isFriendForWall =
-    friendshipData?.status === 'accepted' || session?.user?.id === profile.id;
+  const isFriendForWall = friendshipData?.status === 'accepted' || session?.user?.id === profile.id;
   const canPost = (() => {
     if (!session?.user) return false;
     if (profile.wallWhoCanPost === 'authenticated') return true;
@@ -136,8 +132,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
   // Determine countdown visibility
   const isFriend = mutualFriends.count > 0; // approximate — real check is via friendship API
   const isSelf = session?.user?.id === profile.id;
-  const canSeeCountdown =
-    profile.countdownVisibility === 'public' || isSelf || isFriend;
+  const canSeeCountdown = profile.countdownVisibility === 'public' || isSelf || isFriend;
 
   return (
     <main className="max-w-2xl mx-auto px-4 py-8">
@@ -165,9 +160,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
           <p className="text-gray-500 text-sm">@{profile.username}</p>
         </div>
 
-        {profile.bio && (
-          <p className="text-center text-gray-700 max-w-md">{profile.bio}</p>
-        )}
+        {profile.bio && <p className="text-center text-gray-700 max-w-md">{profile.bio}</p>}
 
         <div className="flex items-center gap-3">
           <ShareButton username={username} displayName={profile.displayName} />

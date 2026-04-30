@@ -1,17 +1,25 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
-import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
-import { createServiceToken } from '@/lib/service-token';
+import { redirect } from 'next/navigation';
 import { z } from 'zod';
+import { auth } from '@/lib/auth';
+import { createServiceToken } from '@/lib/service-token';
 
 const USERNAME_REGEX = /^[a-z0-9_-]{3,30}$/;
 
 const RESERVED_USERNAMES = new Set([
-  'admin', 'api', 'static', 'health', 'auth',
-  'login', 'register', 'settings', 'feed', 'notifications',
+  'admin',
+  'api',
+  'static',
+  'health',
+  'auth',
+  'login',
+  'register',
+  'settings',
+  'feed',
+  'notifications',
 ]);
 
 const updateProfileSchema = z.object({

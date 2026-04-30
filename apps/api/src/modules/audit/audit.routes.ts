@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify';
-import { AuditRepository } from './audit.repository.js';
 import { AppError } from '../../errors.js';
+import { AuditRepository } from './audit.repository.js';
 
 export async function auditRoutes(fastify: FastifyInstance) {
   const repo = new AuditRepository();

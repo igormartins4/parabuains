@@ -1,7 +1,7 @@
-import { describe, it, expect, vi } from 'vitest';
 import { DateTime } from 'luxon';
-import { FeedService } from '../feed.service.js';
+import { describe, expect, it, vi } from 'vitest';
 import type { BirthdayCandidate } from '../feed.repository.js';
+import { FeedService } from '../feed.service.js';
 
 // Helper to make a candidate with specific month/day
 const makeCandidate = (overrides: Partial<BirthdayCandidate> = {}): BirthdayCandidate => ({

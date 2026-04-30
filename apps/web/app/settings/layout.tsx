@@ -15,7 +15,10 @@ export default function SettingsLayout({ children }: { children: ReactNode }) {
         <div className="flex flex-col gap-6 md:flex-row">
           {/* Sidebar navigation */}
           <aside className="w-full md:w-52 shrink-0">
-            <nav aria-label="Menu de configurações" className="flex flex-row md:flex-col gap-1 overflow-x-auto md:overflow-visible pb-2 md:pb-0">
+            <nav
+              aria-label="Menu de configurações"
+              className="flex flex-row md:flex-col gap-1 overflow-x-auto md:overflow-visible pb-2 md:pb-0"
+            >
               {settingsLinks.map((link) => (
                 <Link
                   key={link.href}

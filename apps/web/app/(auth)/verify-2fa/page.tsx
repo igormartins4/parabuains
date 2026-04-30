@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, FormEvent, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { type FormEvent, Suspense, useState } from 'react';
 import { authClient } from '@/lib/auth-client';
 
 function TwoFactorForm() {
@@ -62,9 +62,7 @@ function TwoFactorForm() {
           />
         </div>
 
-        {error && (
-          <p className="text-sm text-red-600">{error}</p>
-        )}
+        {error && <p className="text-sm text-red-600">{error}</p>}
 
         <button
           type="submit"

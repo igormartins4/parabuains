@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
 import Link from 'next/link';
-import { signIn } from '@/lib/auth-client';
+import { type FormEvent, useState } from 'react';
 import { GoogleSignInButton } from '@/components/auth/GoogleSignInButton';
+import { signIn } from '@/lib/auth-client';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -79,9 +79,7 @@ export default function LoginPage() {
           />
         </div>
 
-        {error && (
-          <p className="text-sm text-red-600">{error}</p>
-        )}
+        {error && <p className="text-sm text-red-600">{error}</p>}
 
         <button
           type="submit"

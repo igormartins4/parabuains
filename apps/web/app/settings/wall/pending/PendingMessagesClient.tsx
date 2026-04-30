@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useState } from 'react';
 import type { WallMessageData } from '@/lib/api/messages';
 
@@ -40,9 +41,7 @@ export function PendingMessagesClient({ initialMessages }: PendingMessagesClient
   if (messages.length === 0) {
     return (
       <div className="rounded-xl border border-dashed border-zinc-300 p-8 text-center dark:border-zinc-700">
-        <p className="text-zinc-500 dark:text-zinc-400">
-          Nenhuma mensagem pendente. Tudo em dia!
-        </p>
+        <p className="text-zinc-500 dark:text-zinc-400">Nenhuma mensagem pendente. Tudo em dia!</p>
       </div>
     );
   }
@@ -65,9 +64,11 @@ export function PendingMessagesClient({ initialMessages }: PendingMessagesClient
               {/* Avatar */}
               <div className="flex-shrink-0">
                 {avatarUrl ? (
-                  <img
+                  <Image
                     src={avatarUrl}
                     alt={`Avatar de ${displayName}`}
+                    width={36}
+                    height={36}
                     className="h-9 w-9 rounded-full object-cover"
                   />
                 ) : (
@@ -98,10 +99,7 @@ export function PendingMessagesClient({ initialMessages }: PendingMessagesClient
                   {message.content}
                 </p>
 
-                <time
-                  dateTime={message.createdAt}
-                  className="mt-1 block text-xs text-zinc-400"
-                >
+                <time dateTime={message.createdAt} className="mt-1 block text-xs text-zinc-400">
                   {new Date(message.createdAt).toLocaleDateString('pt-BR', {
                     day: 'numeric',
                     month: 'short',
@@ -116,12 +114,14 @@ export function PendingMessagesClient({ initialMessages }: PendingMessagesClient
             {/* Approval actions */}
             <div className="mt-3 flex items-center gap-3 border-t border-zinc-100 pt-3 dark:border-zinc-700">
               <button
+                type="button"
                 onClick={() => handleApprove(message.id)}
                 className="rounded-lg bg-green-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-green-700"
               >
                 Aprovar
               </button>
               <button
+                type="button"
                 onClick={() => handleReject(message.id)}
                 className="rounded-lg border border-red-300 px-4 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50 dark:border-red-700 dark:text-red-400 dark:hover:bg-red-950"
               >

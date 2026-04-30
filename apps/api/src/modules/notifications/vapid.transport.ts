@@ -19,7 +19,7 @@ export class VapidTransport {
 
   async sendPushNotification(
     subscription: PushSubscriptionKeys,
-    payload: PushPayload,
+    payload: PushPayload
   ): Promise<'sent' | 'invalid_endpoint'> {
     const pushSubscription = {
       endpoint: subscription.endpoint,

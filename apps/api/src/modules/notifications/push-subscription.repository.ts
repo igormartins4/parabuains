@@ -1,6 +1,6 @@
+import { pushSubscriptions } from '@parabuains/db';
 import { eq } from 'drizzle-orm';
 import { getDb } from '../../infrastructure/db.js';
-import { pushSubscriptions } from '@parabuains/db';
 
 export interface PushSubscription {
   id: string;
@@ -15,7 +15,7 @@ export interface PushSubscription {
 export interface IPushSubscriptionRepository {
   save(
     userId: string,
-    sub: { endpoint: string; p256dhKey: string; authKey: string; userAgent?: string },
+    sub: { endpoint: string; p256dhKey: string; authKey: string; userAgent?: string }
   ): Promise<PushSubscription>;
   deleteByEndpoint(endpoint: string): Promise<void>;
   findByUserId(userId: string): Promise<PushSubscription[]>;
@@ -28,7 +28,7 @@ export class DrizzlePushSubscriptionRepository implements IPushSubscriptionRepos
 
   async save(
     userId: string,
-    sub: { endpoint: string; p256dhKey: string; authKey: string; userAgent?: string },
+    sub: { endpoint: string; p256dhKey: string; authKey: string; userAgent?: string }
   ): Promise<PushSubscription> {
     const [row] = await this.db
       .insert(pushSubscriptions)
@@ -73,9 +73,7 @@ export class DrizzlePushSubscriptionRepository implements IPushSubscriptionRepos
   }
 
   async deleteByEndpoint(endpoint: string): Promise<void> {
-    await this.db
-      .delete(pushSubscriptions)
-      .where(eq(pushSubscriptions.endpoint, endpoint));
+    await this.db.delete(pushSubscriptions).where(eq(pushSubscriptions.endpoint, endpoint));
   }
 
   async findByUserId(userId: string): Promise<PushSubscription[]> {

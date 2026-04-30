@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+import { ConflictError, ForbiddenError, NotFoundError } from '../../../errors.js';
 import { FriendshipService } from '../friendship.service.js';
-import { NotFoundError, ConflictError, ForbiddenError } from '../../../errors.js';
 
 const makeRepo = (overrides = {}) => ({
   findBetween: vi.fn().mockResolvedValue(null),
@@ -63,7 +63,9 @@ describe('FriendshipService.sendRequest', () => {
   it('throws ConflictError when friendship request already exists', async () => {
     const repo = makeRepo({ findBetween: vi.fn().mockResolvedValue(pendingFriendship) });
     const service = new FriendshipService(repo as any);
-    await expect(service.sendRequest('alice', 'bob')).rejects.toThrow('Friend request already sent');
+    await expect(service.sendRequest('alice', 'bob')).rejects.toThrow(
+      'Friend request already sent'
+    );
   });
 
   it('auto-accepts when addressee sends request to requester (reciprocal)', async () => {

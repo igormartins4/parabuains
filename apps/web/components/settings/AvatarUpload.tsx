@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useRef } from 'react';
 import Image from 'next/image';
-import { uploadAvatar, AvatarUploadError } from '@/lib/avatar';
+import { useRef, useState } from 'react';
+import { AvatarUploadError, uploadAvatar } from '@/lib/avatar';
 
 interface AvatarUploadProps {
   currentAvatarUrl: string | null;
@@ -22,7 +22,7 @@ export function AvatarUpload({ currentAvatarUrl, displayName }: AvatarUploadProp
 
     try {
       const result = await uploadAvatar(file);
-      setAvatarUrl(result.avatarUrl + `?t=${Date.now()}`);
+      setAvatarUrl(`${result.avatarUrl}?t=${Date.now()}`);
     } catch (err) {
       if (err instanceof AvatarUploadError) {
         setError(err.message);
@@ -49,6 +49,7 @@ export function AvatarUpload({ currentAvatarUrl, displayName }: AvatarUploadProp
 
   return (
     <div className="flex flex-col items-center gap-4">
+      {/* biome-ignore lint/a11y/noStaticElementInteractions: drop target for drag-and-drop avatar upload; not keyboard-interactive */}
       <div
         className={`relative w-24 h-24 rounded-full overflow-hidden bg-gray-100 border-2 transition-colors ${
           isDragging ? 'border-pink-400 border-dashed' : 'border-transparent'

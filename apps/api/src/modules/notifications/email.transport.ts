@@ -5,7 +5,7 @@ export class EmailTransport {
 
   constructor(
     private readonly apiKey: string,
-    private readonly fromEmail: string,
+    private readonly fromEmail: string
   ) {}
 
   private get resend(): Resend {

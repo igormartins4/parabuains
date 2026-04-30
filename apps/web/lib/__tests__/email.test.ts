@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mockSend = vi.fn();
 vi.mock('@/lib/resend', () => ({
@@ -15,7 +15,10 @@ describe('sendVerificationEmail', () => {
     mockSend.mockResolvedValue({ data: { id: 'test-id' }, error: null });
     const { sendVerificationEmail } = await import('@/lib/email');
     await expect(
-      sendVerificationEmail({ to: 'user@example.com', url: 'https://parabuains.com/verify?token=abc' })
+      sendVerificationEmail({
+        to: 'user@example.com',
+        url: 'https://parabuains.com/verify?token=abc',
+      })
     ).resolves.not.toThrow();
     expect(mockSend).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -29,7 +32,10 @@ describe('sendVerificationEmail', () => {
     mockSend.mockResolvedValue({ data: null, error: { message: 'API Error' } });
     const { sendVerificationEmail } = await import('@/lib/email');
     await expect(
-      sendVerificationEmail({ to: 'user@example.com', url: 'https://parabuains.com/verify?token=abc' })
+      sendVerificationEmail({
+        to: 'user@example.com',
+        url: 'https://parabuains.com/verify?token=abc',
+      })
     ).rejects.toThrow('Failed to send verification email');
   });
 });
@@ -43,7 +49,10 @@ describe('sendPasswordResetEmail', () => {
     mockSend.mockResolvedValue({ data: { id: 'test-id' }, error: null });
     const { sendPasswordResetEmail } = await import('@/lib/email');
     await expect(
-      sendPasswordResetEmail({ to: 'user@example.com', url: 'https://parabuains.com/reset?token=xyz' })
+      sendPasswordResetEmail({
+        to: 'user@example.com',
+        url: 'https://parabuains.com/reset?token=xyz',
+      })
     ).resolves.not.toThrow();
   });
 
@@ -51,7 +60,10 @@ describe('sendPasswordResetEmail', () => {
     mockSend.mockResolvedValue({ data: null, error: { message: 'Rate limited' } });
     const { sendPasswordResetEmail } = await import('@/lib/email');
     await expect(
-      sendPasswordResetEmail({ to: 'user@example.com', url: 'https://parabuains.com/reset?token=xyz' })
+      sendPasswordResetEmail({
+        to: 'user@example.com',
+        url: 'https://parabuains.com/reset?token=xyz',
+      })
     ).rejects.toThrow('Failed to send password reset email');
   });
 });

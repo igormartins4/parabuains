@@ -94,9 +94,7 @@ export class DrizzleBirthdaySchedulerRepository implements IBirthdaySchedulerRep
         userId: row.birthdayPersonId,
         username: row.birthdayPersonUsername,
         displayName: row.birthdayPersonDisplayName,
-        birthDate: typeof row.birthDate === 'string'
-          ? row.birthDate
-          : String(row.birthDate),
+        birthDate: typeof row.birthDate === 'string' ? row.birthDate : String(row.birthDate),
       },
     }));
   }

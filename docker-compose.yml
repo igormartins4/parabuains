@@ -1,0 +1,107 @@
+services:
+  # ─── Infrastructure ──────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: parabuains
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d parabuains"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+
+  # ─── Applications ─────────────────────────────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+      target: dev
+    restart: unless-stopped
+    env_file:
+      - .env.docker
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    develop:
+      watch:
+        # Sync source code — hot reload via tsx watch
+        - action: sync
+          path: ./apps/api/src
+          target: /app/apps/api/src
+        - action: sync
+          path: ./packages/db/src
+          target: /app/packages/db/src
+        # Rebuild container when dependencies change
+        - action: rebuild
+          path: ./apps/api/package.json
+        - action: rebuild
+          path: ./packages/db/package.json
+        - action: rebuild
+          path: ./pnpm-lock.yaml
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      target: dev
+    restart: unless-stopped
+    env_file:
+      - .env.docker
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    develop:
+      watch:
+        # Sync source code — hot reload via Next.js dev server
+        - action: sync
+          path: ./apps/web/app
+          target: /app/apps/web/app
+        - action: sync
+          path: ./apps/web/components
+          target: /app/apps/web/components
+        - action: sync
+          path: ./apps/web/lib
+          target: /app/apps/web/lib
+        - action: sync
+          path: ./apps/web/hooks
+          target: /app/apps/web/hooks
+        - action: sync
+          path: ./apps/web/public
+          target: /app/apps/web/public
+        # Rebuild container when dependencies change
+        - action: rebuild
+          path: ./apps/web/package.json
+        - action: rebuild
+          path: ./pnpm-lock.yaml
+
+volumes:
+  postgres_data:
+  redis_data:

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AnomalyDetectionService } from '../anomaly-detection.service.js';
 
 describe('AnomalyDetectionService', () => {
@@ -28,7 +28,7 @@ describe('AnomalyDetectionService', () => {
       redisMock.incr.mockResolvedValue(21);
       await expect(service.checkLoginFlood('1.2.3.4')).rejects.toThrow('Login flood');
       expect(auditMock.insert).toHaveBeenCalledWith(
-        expect.objectContaining({ action: 'anomaly.login_flood', ipAddress: '1.2.3.4' }),
+        expect.objectContaining({ action: 'anomaly.login_flood', ipAddress: '1.2.3.4' })
       );
     });
 
@@ -57,7 +57,7 @@ describe('AnomalyDetectionService', () => {
       redisMock.incr.mockResolvedValue(51);
       await expect(service.checkMessageFlood('user-123')).rejects.toThrow();
       expect(auditMock.insert).toHaveBeenCalledWith(
-        expect.objectContaining({ action: 'anomaly.message_flood', actorId: 'user-123' }),
+        expect.objectContaining({ action: 'anomaly.message_flood', actorId: 'user-123' })
       );
     });
 
@@ -80,7 +80,7 @@ describe('AnomalyDetectionService', () => {
       redisMock.incr.mockResolvedValue(31);
       await expect(service.checkFriendshipFlood('user-456')).rejects.toThrow();
       expect(auditMock.insert).toHaveBeenCalledWith(
-        expect.objectContaining({ action: 'anomaly.friendship_flood' }),
+        expect.objectContaining({ action: 'anomaly.friendship_flood' })
       );
     });
 
@@ -105,7 +105,7 @@ describe('AnomalyDetectionService', () => {
       const result = await service.checkResetFlood('1.2.3.4');
       expect(result).toBe(true); // silencioso
       expect(auditMock.insert).toHaveBeenCalledWith(
-        expect.objectContaining({ action: 'anomaly.reset_flood' }),
+        expect.objectContaining({ action: 'anomaly.reset_flood' })
       );
     });
 
@@ -128,7 +128,7 @@ describe('AnomalyDetectionService', () => {
       redisMock.incr.mockResolvedValue(11);
       await expect(service.checkLoginFloodByEmail('bad@test.com')).resolves.not.toThrow();
       expect(auditMock.insert).toHaveBeenCalledWith(
-        expect.objectContaining({ action: 'anomaly.login_flood_email' }),
+        expect.objectContaining({ action: 'anomaly.login_flood_email' })
       );
     });
 
@@ -137,7 +137,7 @@ describe('AnomalyDetectionService', () => {
       await service.checkLoginFloodByEmail('test@test.com');
       expect(redisMock.expire).toHaveBeenCalledWith(
         expect.stringContaining('anomaly:login:email:'),
-        900,
+        900
       );
     });
   });

@@ -1,5 +1,5 @@
-import { NotFoundError, ConflictError, ForbiddenError } from '../../errors.js';
-import { FriendshipRepository } from './friendship.repository.js';
+import { ConflictError, ForbiddenError, NotFoundError } from '../../errors.js';
+import type { FriendshipRepository } from './friendship.repository.js';
 import type { FriendshipStatus } from './friendship.schemas.js';
 
 export class FriendshipService {
@@ -85,7 +85,7 @@ export class FriendshipService {
     query: string,
     viewerId: string,
     limit: number,
-    cursor?: { displayName: string; id: string },
+    cursor?: { displayName: string; id: string }
   ) {
     const { users, friendships } = await this.repo.searchUsers(query, viewerId, limit, cursor);
 

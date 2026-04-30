@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useState } from 'react';
 import type { WallMessageData } from '../../lib/api/messages';
 import { ComposeMessageModal } from './ComposeMessageModal';
@@ -36,9 +37,7 @@ function MessageCard({
   const canReport = currentUserId !== null && !isOwner && !isAuthor;
 
   // CRITICAL: Never render real author info for anonymous messages
-  const displayName = message.isAnonymous
-    ? 'Anônimo'
-    : (message.author?.displayName ?? 'Usuário');
+  const displayName = message.isAnonymous ? 'Anônimo' : (message.author?.displayName ?? 'Usuário');
   const avatarUrl = message.isAnonymous ? null : (message.author?.avatarUrl ?? null);
   const showAuthorLink = !message.isAnonymous && message.author;
 
@@ -48,9 +47,11 @@ function MessageCard({
         {/* Avatar */}
         <div className="flex-shrink-0">
           {avatarUrl ? (
-            <img
+            <Image
               src={avatarUrl}
               alt={`Avatar de ${displayName}`}
+              width={36}
+              height={36}
               className="h-9 w-9 rounded-full object-cover"
             />
           ) : (
@@ -68,7 +69,7 @@ function MessageCard({
           <div className="flex items-center gap-2">
             {showAuthorLink ? (
               <a
-                href={`/${message.author!.username}`}
+                href={`/${message.author?.username}`}
                 className="text-sm font-medium text-zinc-900 hover:underline dark:text-zinc-100"
               >
                 {displayName}
@@ -102,6 +103,7 @@ function MessageCard({
 
             {canDelete && (
               <button
+                type="button"
                 onClick={() => onDelete(message.id)}
                 className="text-xs text-red-500 hover:underline"
                 aria-label="Deletar mensagem"
@@ -112,6 +114,7 @@ function MessageCard({
 
             {canReport && (
               <button
+                type="button"
                 onClick={() => onReport(message.id)}
                 className="text-xs text-zinc-400 hover:text-zinc-600 hover:underline dark:hover:text-zinc-300"
                 aria-label="Reportar mensagem"
@@ -186,6 +189,7 @@ export function WallSection({
         </h2>
         {canPost && currentUserId && (
           <button
+            type="button"
             onClick={() => setIsComposing(true)}
             className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
           >

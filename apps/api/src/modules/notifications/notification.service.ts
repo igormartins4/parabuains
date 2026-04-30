@@ -1,12 +1,12 @@
+import type { EmailTransport } from './email.transport.js';
+import type { INotificationLogRepository } from './notification-log.repository.js';
 import type {
   INotificationPreferencesRepository,
-  NotificationPreference,
   NotificationChannel,
+  NotificationPreference,
 } from './notification-preferences.repository.js';
-import type { INotificationLogRepository } from './notification-log.repository.js';
-import type { EmailTransport } from './email.transport.js';
-import type { VapidTransport } from './vapid.transport.js';
 import type { IPushSubscriptionRepository } from './push-subscription.repository.js';
+import type { VapidTransport } from './vapid.transport.js';
 
 export interface IUserLookup {
   findById(id: string): Promise<{
@@ -24,7 +24,7 @@ export class NotificationService {
     private readonly emailTransport: EmailTransport,
     private readonly userRepo: IUserLookup,
     private readonly vapidTransport: VapidTransport | null = null,
-    private readonly pushSubRepo: IPushSubscriptionRepository | null = null,
+    private readonly pushSubRepo: IPushSubscriptionRepository | null = null
   ) {}
 
   async getPreferences(userId: string): Promise<NotificationPreference[]> {
@@ -35,7 +35,7 @@ export class NotificationService {
     userId: string,
     channel: NotificationChannel,
     daysBefore: number[],
-    enabled: boolean,
+    enabled: boolean
   ): Promise<NotificationPreference> {
     return this.prefsRepo.upsert(userId, channel, daysBefore, enabled);
   }
@@ -44,10 +44,7 @@ export class NotificationService {
    * Called by BullMQ worker when a wall message is posted.
    * Sends email + push notification to the wall owner per their preferences.
    */
-  async handleWallMessagePosted(
-    profileId: string,
-    authorId: string | null,
-  ): Promise<void> {
+  async handleWallMessagePosted(profileId: string, authorId: string | null): Promise<void> {
     const profile = await this.userRepo.findById(profileId);
     if (!profile) return;
 
@@ -113,10 +110,7 @@ export class NotificationService {
    * Called by BullMQ worker when a friendship request is accepted.
    * Notifies the original requester (recipientId) per their preferences.
    */
-  async handleFriendshipAccepted(
-    recipientId: string,
-    actorId: string,
-  ): Promise<void> {
+  async handleFriendshipAccepted(recipientId: string, actorId: string): Promise<void> {
     const recipient = await this.userRepo.findById(recipientId);
     if (!recipient) return;
 
@@ -178,7 +172,7 @@ export class NotificationService {
   /** Save a push subscription for a user. */
   async savePushSubscription(
     userId: string,
-    sub: { endpoint: string; p256dhKey: string; authKey: string; userAgent?: string },
+    sub: { endpoint: string; p256dhKey: string; authKey: string; userAgent?: string }
   ): Promise<void> {
     if (!this.pushSubRepo) throw new Error('Push subscription repository not configured');
     await this.pushSubRepo.save(userId, sub);

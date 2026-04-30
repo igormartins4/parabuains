@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, boolean, uuid, varchar } from 'drizzle-orm/pg-core';
+import { boolean, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 
 // better-auth required tables
 export const user = pgTable('user', {

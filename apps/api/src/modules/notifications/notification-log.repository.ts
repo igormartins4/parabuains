@@ -1,6 +1,6 @@
-import { eq, and, sql } from 'drizzle-orm';
-import { getDb } from '../../infrastructure/db.js';
 import { notificationLog } from '@parabuains/db';
+import { and, eq, sql } from 'drizzle-orm';
+import { getDb } from '../../infrastructure/db.js';
 
 export type NotificationReminderType = 'D7' | 'D3' | 'D1' | 'Dday';
 export type NotificationStatus = 'sent' | 'failed' | 'skipped';
@@ -21,7 +21,7 @@ export interface INotificationLogRepository {
     subjectId: string,
     channel: string,
     reminderType: string,
-    year: number,
+    year: number
   ): Promise<boolean>;
 }
 
@@ -46,7 +46,7 @@ export class DrizzleNotificationLogRepository implements INotificationLogReposit
     subjectId: string,
     channel: string,
     reminderType: string,
-    year: number,
+    year: number
   ): Promise<boolean> {
     const [row] = await this.db
       .select({ id: notificationLog.id })
@@ -57,8 +57,8 @@ export class DrizzleNotificationLogRepository implements INotificationLogReposit
           eq(notificationLog.subjectId, subjectId),
           eq(notificationLog.channel, channel),
           eq(notificationLog.reminderType, reminderType),
-          sql`extract(year from ${notificationLog.sentAt}) = ${year}`,
-        ),
+          sql`extract(year from ${notificationLog.sentAt}) = ${year}`
+        )
       )
       .limit(1);
 

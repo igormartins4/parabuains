@@ -13,7 +13,7 @@ function getRedis(): IORedis {
       enableReadyCheck: false,
       maxRetriesPerRequest: 1,
     });
-    _redis.on('error', (err) => console.error('[AccountLockout Redis]', err.message));
+    _redis.on('error', (_err) => {});
   }
   return _redis;
 }
@@ -36,7 +36,9 @@ export async function isAccountLocked(email: string): Promise<{ locked: boolean;
   }
 }
 
-export async function recordFailedAttempt(email: string): Promise<{ attempts: number; locked: boolean }> {
+export async function recordFailedAttempt(
+  email: string
+): Promise<{ attempts: number; locked: boolean }> {
   try {
     const redis = getRedis();
     const key = attemptsKey(email);

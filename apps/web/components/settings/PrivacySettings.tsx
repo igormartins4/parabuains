@@ -40,13 +40,17 @@ export function PrivacySettings({ privacyLevel, countdownVisibility }: PrivacySe
   function handlePrivacyChange(newPrivacyLevel: string) {
     const formData = new FormData();
     formData.set('privacyLevel', newPrivacyLevel);
-    startTransition(() => { void updatePrivacyAction(formData); });
+    startTransition(() => {
+      void updatePrivacyAction(formData);
+    });
   }
 
   function handleCountdownChange(newVisibility: string) {
     const formData = new FormData();
     formData.set('countdownVisibility', newVisibility);
-    startTransition(() => { void updatePrivacyAction(formData); });
+    startTransition(() => {
+      void updatePrivacyAction(formData);
+    });
   }
 
   return (

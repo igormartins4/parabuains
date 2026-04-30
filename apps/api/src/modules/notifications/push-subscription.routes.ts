@@ -1,12 +1,12 @@
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
-import { DrizzlePushSubscriptionRepository } from './push-subscription.repository.js';
-import { DrizzleNotificationPreferencesRepository } from './notification-preferences.repository.js';
-import { DrizzleNotificationLogRepository } from './notification-log.repository.js';
-import { EmailTransport } from './email.transport.js';
-import { VapidTransport } from './vapid.transport.js';
-import { NotificationService } from './notification.service.js';
 import { UserRepository } from '../users/user.repository.js';
+import { EmailTransport } from './email.transport.js';
+import { NotificationService } from './notification.service.js';
+import { DrizzleNotificationLogRepository } from './notification-log.repository.js';
+import { DrizzleNotificationPreferencesRepository } from './notification-preferences.repository.js';
+import { DrizzlePushSubscriptionRepository } from './push-subscription.repository.js';
+import { VapidTransport } from './vapid.transport.js';
 
 const subscribeBodySchema = z.object({
   endpoint: z.string().min(1),
@@ -22,13 +22,13 @@ function createNotificationService(): NotificationService {
   const userRepo = new UserRepository();
   const pushSubRepo = new DrizzlePushSubscriptionRepository();
 
-  const apiKey = process.env['RESEND_API_KEY'] ?? '';
-  const fromEmail = process.env['RESEND_FROM_EMAIL'] ?? 'noreply@parabuains.com';
+  const apiKey = process.env.RESEND_API_KEY ?? '';
+  const fromEmail = process.env.RESEND_FROM_EMAIL ?? 'noreply@parabuains.com';
   const emailTransport = new EmailTransport(apiKey, fromEmail);
 
-  const vapidPublicKey = process.env['VAPID_PUBLIC_KEY'];
-  const vapidPrivateKey = process.env['VAPID_PRIVATE_KEY'];
-  const vapidSubject = process.env['VAPID_SUBJECT'] ?? 'mailto:admin@parabuains.com';
+  const vapidPublicKey = process.env.VAPID_PUBLIC_KEY;
+  const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY;
+  const vapidSubject = process.env.VAPID_SUBJECT ?? 'mailto:admin@parabuains.com';
   const vapidTransport =
     vapidPublicKey && vapidPrivateKey
       ? new VapidTransport(vapidPublicKey, vapidPrivateKey, vapidSubject)
@@ -40,7 +40,7 @@ function createNotificationService(): NotificationService {
     emailTransport,
     userRepo,
     vapidTransport,
-    pushSubRepo,
+    pushSubRepo
   );
 }
 
@@ -79,7 +79,7 @@ export async function pushSubscriptionRoutes(fastify: FastifyInstance): Promise<
       });
 
       return reply.code(201).send({ subscribed: true });
-    },
+    }
   );
 
   /**
@@ -97,6 +97,6 @@ export async function pushSubscriptionRoutes(fastify: FastifyInstance): Promise<
       const endpoint = decodeURIComponent(request.params.endpoint);
       await service.deletePushSubscription(endpoint);
       return reply.code(204).send();
-    },
+    }
   );
 }

@@ -1,10 +1,5 @@
-import { type NextRequest } from 'next/server';
+import type { NextRequest } from 'next/server';
 import { bffProxy } from '@/lib/bff';
 
-export const POST = (
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-) =>
-  params.then(({ id }) =>
-    bffProxy(req, `/v1/friendships/${id}/accept`, { method: 'POST' }),
-  );
+export const POST = (req: NextRequest, { params }: { params: Promise<{ id: string }> }) =>
+  params.then(({ id }) => bffProxy(req, `/v1/friendships/${id}/accept`, { method: 'POST' }));

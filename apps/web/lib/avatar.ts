@@ -8,7 +8,7 @@ export interface AvatarUploadResult {
 export class AvatarUploadError extends Error {
   constructor(
     message: string,
-    public readonly code: string,
+    public readonly code: string
   ) {
     super(message);
     this.name = 'AvatarUploadError';
@@ -26,13 +26,13 @@ export async function uploadAvatar(file: File): Promise<AvatarUploadResult> {
   if (!ALLOWED_TYPES.includes(file.type)) {
     throw new AvatarUploadError(
       `Invalid file type: ${file.type}. Please upload a JPEG, PNG, or WebP image.`,
-      'INVALID_MIME',
+      'INVALID_MIME'
     );
   }
   if (file.size > MAX_SIZE) {
     throw new AvatarUploadError(
       `File is too large (${(file.size / 1024 / 1024).toFixed(1)}MB). Maximum size is 5MB.`,
-      'FILE_TOO_LARGE',
+      'FILE_TOO_LARGE'
     );
   }
 
@@ -60,7 +60,7 @@ export async function uploadAvatar(file: File): Promise<AvatarUploadResult> {
   if (!uploadResponse.ok) {
     throw new AvatarUploadError(
       'Failed to upload to storage. Please try again.',
-      'R2_UPLOAD_FAILED',
+      'R2_UPLOAD_FAILED'
     );
   }
 
@@ -74,7 +74,7 @@ export async function uploadAvatar(file: File): Promise<AvatarUploadResult> {
   if (!confirmResponse.ok) {
     throw new AvatarUploadError(
       'Upload succeeded but processing failed. Please try again.',
-      'CONFIRM_FAILED',
+      'CONFIRM_FAILED'
     );
   }
 

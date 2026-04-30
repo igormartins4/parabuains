@@ -7,9 +7,7 @@ export default function ProfileNotFound() {
         🎂
       </span>
       <h1 className="text-2xl font-bold mt-6 mb-2">Perfil não encontrado</h1>
-      <p className="text-gray-500 mb-8">
-        Este perfil não existe ou pode ter mudado de username.
-      </p>
+      <p className="text-gray-500 mb-8">Este perfil não existe ou pode ter mudado de username.</p>
       <Link
         href="/"
         className="inline-flex items-center px-6 py-3 rounded-full bg-pink-600 text-white font-medium hover:bg-pink-700 transition-colors"

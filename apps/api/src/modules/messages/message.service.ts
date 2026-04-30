@@ -1,11 +1,11 @@
-import sanitizeHtml from 'sanitize-html';
 import type { Queue } from 'bullmq';
+import sanitizeHtml from 'sanitize-html';
 import type {
   IMessageRepository,
+  MessageStatus,
   PostMessageInput,
   WallMessageResponse,
   WallSettings,
-  MessageStatus,
 } from './message.types.js';
 
 /** Number of reports before a message is auto-hidden for owner review. */
@@ -23,7 +23,7 @@ export function sanitizeMessage(content: string): string {
 export class MessageService {
   constructor(
     private messageRepo: IMessageRepository,
-    private notificationQueue: Queue,
+    private notificationQueue: Queue
   ) {}
 
   /**
@@ -72,10 +72,7 @@ export class MessageService {
     };
   }
 
-  async getWallMessages(
-    username: string,
-    viewerId: string | null,
-  ): Promise<WallMessageResponse[]> {
+  async getWallMessages(username: string, viewerId: string | null): Promise<WallMessageResponse[]> {
     const profile = await this.messageRepo.findUserWithWallSettings(username);
     if (!profile) {
       throw Object.assign(new Error('User not found'), { statusCode: 404 });
@@ -99,19 +96,17 @@ export class MessageService {
 
     // Validate anonymous is allowed on this wall
     if (isAnonymous && !profile.wallAllowAnonymous) {
-      throw Object.assign(
-        new Error('Anonymous messages not allowed on this wall'),
-        { statusCode: 400 },
-      );
+      throw Object.assign(new Error('Anonymous messages not allowed on this wall'), {
+        statusCode: 400,
+      });
     }
 
     // XSS sanitization BEFORE persistence — service layer responsibility
     const sanitizedContent = sanitizeMessage(input.content);
     if (!sanitizedContent) {
-      throw Object.assign(
-        new Error('Message content is empty after sanitization'),
-        { statusCode: 400 },
-      );
+      throw Object.assign(new Error('Message content is empty after sanitization'), {
+        statusCode: 400,
+      });
     }
 
     // Determine initial status based on wall settings
@@ -162,10 +157,9 @@ export class MessageService {
       throw Object.assign(new Error('Message not found'), { statusCode: 404 });
     }
     if (message.profileId !== requesterId) {
-      throw Object.assign(
-        new Error('Forbidden — only wall owner can approve'),
-        { statusCode: 403 },
-      );
+      throw Object.assign(new Error('Forbidden — only wall owner can approve'), {
+        statusCode: 403,
+      });
     }
 
     const updated = await this.messageRepo.updateStatus(messageId, 'published');
@@ -187,19 +181,12 @@ export class MessageService {
       throw Object.assign(new Error('Message not found'), { statusCode: 404 });
     }
     if (message.profileId !== requesterId) {
-      throw Object.assign(
-        new Error('Forbidden — only wall owner can reject'),
-        { statusCode: 403 },
-      );
+      throw Object.assign(new Error('Forbidden — only wall owner can reject'), { statusCode: 403 });
     }
     await this.messageRepo.updateStatus(messageId, 'rejected');
   }
 
-  async reportMessage(
-    messageId: string,
-    reporterId: string,
-    reason: string,
-  ): Promise<void> {
+  async reportMessage(messageId: string, reporterId: string, reason: string): Promise<void> {
     const message = await this.messageRepo.findById(messageId);
     if (!message) {
       throw Object.assign(new Error('Message not found'), { statusCode: 404 });
@@ -219,10 +206,7 @@ export class MessageService {
     return messages.map((m) => this.formatForResponse(m));
   }
 
-  async updateWallSettings(
-    ownerId: string,
-    settings: Partial<WallSettings>,
-  ): Promise<void> {
+  async updateWallSettings(ownerId: string, settings: Partial<WallSettings>): Promise<void> {
     await this.messageRepo.updateWallSettings(ownerId, settings);
   }
 }

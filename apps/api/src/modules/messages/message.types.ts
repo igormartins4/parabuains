@@ -57,7 +57,7 @@ export interface UserWallProfile {
 export interface IMessageRepository {
   findWallMessages(
     profileId: string,
-    viewerRelation: 'owner' | 'author' | 'public',
+    viewerRelation: 'owner' | 'author' | 'public'
   ): Promise<WallMessage[]>;
   create(input: {
     profileId: string;

@@ -1,18 +1,18 @@
+import { sql } from 'drizzle-orm';
 import {
+  boolean,
+  check,
+  date,
+  index,
+  integer,
+  jsonb,
   pgTable,
+  text,
+  timestamp,
+  uniqueIndex,
   uuid,
   varchar,
-  text,
-  boolean,
-  integer,
-  date,
-  timestamp,
-  jsonb,
-  index,
-  uniqueIndex,
-  check,
 } from 'drizzle-orm/pg-core';
-import { sql } from 'drizzle-orm';
 
 // ─── users ───────────────────────────────────────────────────────────────────
 export const users = pgTable(
@@ -29,7 +29,9 @@ export const users = pgTable(
     birthDate: date('birth_date').notNull(),
     birthYearHidden: boolean('birth_year_hidden').default(false).notNull(),
     privacyLevel: varchar('privacy_level', { length: 20 }).default('public').notNull(),
-    countdownVisibility: varchar('countdown_visibility', { length: 20 }).default('public').notNull(),
+    countdownVisibility: varchar('countdown_visibility', { length: 20 })
+      .default('public')
+      .notNull(),
     totpSecret: varchar('totp_secret', { length: 255 }),
     totpEnabled: boolean('totp_enabled').default(false).notNull(),
     timezone: varchar('timezone', { length: 50 }).default('UTC').notNull(),
@@ -46,21 +48,21 @@ export const users = pgTable(
     index('idx_users_username').on(table.username),
     check(
       'users_privacy_level_check',
-      sql`${table.privacyLevel} IN ('public', 'friends', 'private')`,
+      sql`${table.privacyLevel} IN ('public', 'friends', 'private')`
     ),
     check(
       'users_countdown_visibility_check',
-      sql`${table.countdownVisibility} IN ('public', 'friends')`,
+      sql`${table.countdownVisibility} IN ('public', 'friends')`
     ),
     check(
       'users_notification_send_hour_check',
-      sql`${table.notificationSendHour} >= 0 AND ${table.notificationSendHour} <= 23`,
+      sql`${table.notificationSendHour} >= 0 AND ${table.notificationSendHour} <= 23`
     ),
     check(
       'users_wall_who_can_post_check',
-      sql`${table.wallWhoCanPost} IN ('friends', 'authenticated')`,
+      sql`${table.wallWhoCanPost} IN ('friends', 'authenticated')`
     ),
-  ],
+  ]
 );
 
 // ─── oauth_accounts ───────────────────────────────────────────────────────────
@@ -77,7 +79,7 @@ export const oauthAccounts = pgTable(
   },
   (table) => [
     uniqueIndex('oauth_accounts_provider_provider_id_key').on(table.provider, table.providerId),
-  ],
+  ]
 );
 
 // ─── friendships ──────────────────────────────────────────────────────────────
@@ -99,15 +101,9 @@ export const friendships = pgTable(
     index('idx_friendships_addressee').on(table.addresseeId, table.status),
     index('idx_friendships_requester').on(table.requesterId, table.status),
     uniqueIndex('friendships_requester_addressee_key').on(table.requesterId, table.addresseeId),
-    check(
-      'friendships_status_check',
-      sql`${table.status} IN ('pending', 'accepted', 'blocked')`,
-    ),
-    check(
-      'friendships_no_self_friend',
-      sql`${table.requesterId} != ${table.addresseeId}`,
-    ),
-  ],
+    check('friendships_status_check', sql`${table.status} IN ('pending', 'accepted', 'blocked')`),
+    check('friendships_no_self_friend', sql`${table.requesterId} != ${table.addresseeId}`),
+  ]
 );
 
 // ─── username_history ─────────────────────────────────────────────────────────
@@ -124,7 +120,7 @@ export const usernameHistory = pgTable(
   (table) => [
     index('idx_username_history_username').on(table.username),
     index('idx_username_history_user').on(table.userId),
-  ],
+  ]
 );
 
 // ─── totp_backup_codes ────────────────────────────────────────────────────────
@@ -159,9 +155,9 @@ export const wallMessages = pgTable(
     check('wall_messages_content_length', sql`char_length(${table.content}) <= 500`),
     check(
       'wall_messages_status_check',
-      sql`${table.status} IN ('pending', 'published', 'rejected')`,
+      sql`${table.status} IN ('pending', 'published', 'rejected')`
     ),
-  ],
+  ]
 );
 
 // ─── message_reports ──────────────────────────────────────────────────────────
@@ -180,7 +176,7 @@ export const messageReports = pgTable(
   },
   (table) => [
     uniqueIndex('message_reports_message_reporter_key').on(table.messageId, table.reporterId),
-  ],
+  ]
 );
 
 // ─── notification_preferences ─────────────────────────────────────────────────
@@ -198,11 +194,8 @@ export const notificationPreferences = pgTable(
   },
   (table) => [
     uniqueIndex('notification_preferences_user_channel_key').on(table.userId, table.channel),
-    check(
-      'notification_preferences_channel_check',
-      sql`${table.channel} IN ('email', 'push')`,
-    ),
-  ],
+    check('notification_preferences_channel_check', sql`${table.channel} IN ('email', 'push')`),
+  ]
 );
 
 // ─── push_subscriptions ───────────────────────────────────────────────────────
@@ -239,13 +232,10 @@ export const notificationLog = pgTable(
     index('idx_notif_log_recipient').on(table.recipientId, table.sentAt),
     check(
       'notification_log_reminder_type_check',
-      sql`${table.reminderType} IN ('D7', 'D3', 'D1', 'Dday')`,
+      sql`${table.reminderType} IN ('D7', 'D3', 'D1', 'Dday')`
     ),
-    check(
-      'notification_log_status_check',
-      sql`${table.status} IN ('sent', 'failed', 'skipped')`,
-    ),
-  ],
+    check('notification_log_status_check', sql`${table.status} IN ('sent', 'failed', 'skipped')`),
+  ]
 );
 
 // ─── audit_logs ───────────────────────────────────────────────────────────────
@@ -264,5 +254,5 @@ export const auditLogs = pgTable(
   (table) => [
     index('idx_audit_logs_actor').on(table.actorId),
     index('idx_audit_logs_created').on(table.createdAt),
-  ],
+  ]
 );

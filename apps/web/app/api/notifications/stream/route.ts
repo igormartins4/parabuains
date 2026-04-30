@@ -1,6 +1,6 @@
-import { type NextRequest } from 'next/server';
-import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
+import type { NextRequest } from 'next/server';
+import { auth } from '@/lib/auth';
 import { createServiceToken } from '@/lib/service-token';
 
 export const dynamic = 'force-dynamic';

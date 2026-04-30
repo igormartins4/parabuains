@@ -1,6 +1,6 @@
 import 'server-only';
-import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
+import { auth } from '@/lib/auth';
 import { createServiceToken } from '@/lib/service-token';
 
 const INTERNAL_API_URL = process.env.INTERNAL_API_URL ?? 'http://localhost:3001';
@@ -67,20 +67,24 @@ export async function getWallMessages(username: string): Promise<WallMessageData
 export async function postWallMessage(
   username: string,
   content: string,
-  type: 'public' | 'private' | 'anonymous',
+  type: 'public' | 'private' | 'anonymous'
 ): Promise<WallMessageData> {
   const serviceToken = await getServiceToken();
   return apiFetch(
     `/v1/users/${encodeURIComponent(username)}/wall`,
     { method: 'POST', body: JSON.stringify({ content, type }) },
-    serviceToken,
+    serviceToken
   ) as Promise<WallMessageData>;
 }
 
 /** Delete a message */
 export async function deleteWallMessage(messageId: string): Promise<void> {
   const serviceToken = await getServiceToken();
-  await apiFetch(`/v1/messages/${encodeURIComponent(messageId)}`, { method: 'DELETE' }, serviceToken);
+  await apiFetch(
+    `/v1/messages/${encodeURIComponent(messageId)}`,
+    { method: 'DELETE' },
+    serviceToken
+  );
 }
 
 /** Approve a pending message */
@@ -89,7 +93,7 @@ export async function approveMessage(messageId: string): Promise<WallMessageData
   return apiFetch(
     `/v1/messages/${encodeURIComponent(messageId)}/approve`,
     { method: 'PATCH' },
-    serviceToken,
+    serviceToken
   ) as Promise<WallMessageData>;
 }
 
@@ -99,20 +103,20 @@ export async function rejectMessage(messageId: string): Promise<void> {
   await apiFetch(
     `/v1/messages/${encodeURIComponent(messageId)}/reject`,
     { method: 'PATCH' },
-    serviceToken,
+    serviceToken
   );
 }
 
 /** Report a message */
 export async function reportMessage(
   messageId: string,
-  reason: 'spam' | 'harassment' | 'inappropriate' | 'other',
+  reason: 'spam' | 'harassment' | 'inappropriate' | 'other'
 ): Promise<void> {
   const serviceToken = await getServiceToken();
   await apiFetch(
     `/v1/messages/${encodeURIComponent(messageId)}/report`,
     { method: 'POST', body: JSON.stringify({ reason }) },
-    serviceToken,
+    serviceToken
   );
 }
 
@@ -129,6 +133,6 @@ export async function updateWallSettings(settings: Partial<WallSettingsData>): P
   await apiFetch(
     '/v1/users/me/wall/settings',
     { method: 'PUT', body: JSON.stringify(settings) },
-    serviceToken,
+    serviceToken
   );
 }

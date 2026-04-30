@@ -1,9 +1,9 @@
 import { Worker } from 'bullmq';
 import { DateTime } from 'luxon';
 import { getRedis } from '../infrastructure/redis.js';
-import { getNotificationsQueue } from '../queues/notifications.queue.js';
 import { DrizzleBirthdaySchedulerRepository } from '../modules/notifications/birthday-scheduler.repository.js';
 import { DrizzleNotificationLogRepository } from '../modules/notifications/notification-log.repository.js';
+import { getNotificationsQueue } from '../queues/notifications.queue.js';
 
 export interface BirthdayReminderJob {
   type: 'birthday.reminder';
@@ -35,10 +35,14 @@ export function startBirthdaySchedulerWorker(): Worker {
   // Register the repeatable daily scan job (idempotent — BullMQ deduplicates by jobId)
   // We do this lazily on first startBirthdaySchedulerWorker() call
   void getNotificationsQueue()
-    .add('birthday.scan', {}, {
-      repeat: { pattern: '0 0 * * *' }, // midnight UTC daily
-      jobId: 'birthday-daily-scan',
-    })
+    .add(
+      'birthday.scan',
+      {},
+      {
+        repeat: { pattern: '0 0 * * *' }, // midnight UTC daily
+        jobId: 'birthday-daily-scan',
+      }
+    )
     .catch((err: unknown) => {
       console.error('[BirthdayScheduler] Failed to register repeatable job:', err);
     });
@@ -59,21 +63,23 @@ export function startBirthdaySchedulerWorker(): Worker {
       for (const { recipient, birthdayPerson } of pairs) {
         const birthDateStr = birthdayPerson.birthDate;
         const parts = birthDateStr.split('-');
+        // biome-ignore lint/style/noNonNullAssertion: split('-') on YYYY-MM-DD always yields 3 parts
         const month = parseInt(parts[1]!, 10);
+        // biome-ignore lint/style/noNonNullAssertion: split('-') on YYYY-MM-DD always yields 3 parts
         const day = parseInt(parts[2]!, 10);
 
         // Calculate daysUntil in the RECIPIENT's timezone
         const now = DateTime.now().setZone(recipient.timezone);
         let nextBirthday = DateTime.fromObject(
           { year: now.year, month, day },
-          { zone: recipient.timezone },
+          { zone: recipient.timezone }
         );
 
         if (!nextBirthday.isValid) {
           // Feb 29 in non-leap year → use March 1
           nextBirthday = DateTime.fromObject(
             { year: now.year, month: 3, day: 1 },
-            { zone: recipient.timezone },
+            { zone: recipient.timezone }
           );
         }
 
@@ -82,7 +88,7 @@ export function startBirthdaySchedulerWorker(): Worker {
         }
 
         const daysUntil = Math.round(
-          nextBirthday.startOf('day').diff(now.startOf('day'), 'days').days,
+          nextBirthday.startOf('day').diff(now.startOf('day'), 'days').days
         );
 
         // Find which reminder type applies today
@@ -95,7 +101,7 @@ export function startBirthdaySchedulerWorker(): Worker {
           birthdayPerson.userId,
           'email', // check either channel — if sent, skip all
           reminder.type,
-          currentYear,
+          currentYear
         );
         if (alreadySent) continue;
 
@@ -121,7 +127,7 @@ export function startBirthdaySchedulerWorker(): Worker {
     {
       connection: getRedis(),
       concurrency: 1, // birthday scan runs serially
-    },
+    }
   );
 
   _schedulerWorker.on('failed', (job, err) => {

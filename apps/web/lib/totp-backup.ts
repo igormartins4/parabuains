@@ -1,14 +1,14 @@
-import { db } from './db';
+import { randomBytes } from 'node:crypto';
 import { totpBackupCodes } from '@parabuains/db/schema';
-import { eq, and, isNull } from 'drizzle-orm';
 import bcrypt from 'bcryptjs';
-import { randomBytes } from 'crypto';
+import { and, eq, isNull } from 'drizzle-orm';
+import { db } from './db';
 
 const BACKUP_CODE_COUNT = 8;
 const BACKUP_CODE_LENGTH = 10;
 const BCRYPT_COST = 12;
 
-export async function generateBackupCodes(userId: string): Promise<{
+export async function generateBackupCodes(_userId: string): Promise<{
   plainCodes: string[];
   hashedCodes: string[];
 }> {
@@ -29,9 +29,7 @@ export async function generateBackupCodes(userId: string): Promise<{
 
 export async function storeBackupCodes(userId: string, hashedCodes: string[]): Promise<void> {
   await db.delete(totpBackupCodes).where(eq(totpBackupCodes.userId, userId));
-  await db.insert(totpBackupCodes).values(
-    hashedCodes.map((codeHash) => ({ userId, codeHash }))
-  );
+  await db.insert(totpBackupCodes).values(hashedCodes.map((codeHash) => ({ userId, codeHash })));
 }
 
 export async function verifyBackupCode(userId: string, code: string): Promise<boolean> {

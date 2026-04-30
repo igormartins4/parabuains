@@ -7,7 +7,7 @@ export async function sendFriendRequest(addresseeId: string) {
     body: JSON.stringify({ addresseeId }),
   });
   if (!res.ok) {
-    const err = await res.json().catch(() => ({})) as { error?: string };
+    const err = (await res.json().catch(() => ({}))) as { error?: string };
     throw new Error(err.error ?? 'Failed to send request');
   }
   return res.json() as Promise<{ id: string }>;
@@ -18,7 +18,7 @@ export async function acceptFriendRequest(friendshipId: string) {
     method: 'POST',
   });
   if (!res.ok) {
-    const err = await res.json().catch(() => ({})) as { error?: string };
+    const err = (await res.json().catch(() => ({}))) as { error?: string };
     throw new Error(err.error ?? 'Failed to accept request');
   }
   return res.json();
@@ -29,7 +29,7 @@ export async function declineOrRemoveFriendship(friendshipId: string) {
     method: 'DELETE',
   });
   if (!res.ok) {
-    const err = await res.json().catch(() => ({})) as { error?: string };
+    const err = (await res.json().catch(() => ({}))) as { error?: string };
     throw new Error(err.error ?? 'Failed to remove friendship');
   }
 }
@@ -55,7 +55,7 @@ export async function searchUsers(q: string, cursor?: string) {
 }
 
 export async function getFriendshipStatus(
-  targetUserId: string,
+  targetUserId: string
 ): Promise<{ status: FriendshipStatus; friendshipId?: string }> {
   const res = await fetch(`/api/friendships/status/${targetUserId}`);
   if (!res.ok) return { status: 'none' };

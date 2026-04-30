@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+import { ConflictError, NotFoundError } from '../../../errors.js';
 import { UserService } from '../user.service.js';
-import { NotFoundError, ConflictError } from '../../../errors.js';
 
 const makeRepo = (overrides = {}) => ({
   findByUsername: vi.fn(),
@@ -123,7 +123,7 @@ describe('UserService.changeUsername', () => {
     });
     const service = new UserService(repo as any);
     await expect(service.changeUsername('user-uuid-1', { username: 'newname' })).rejects.toThrow(
-      ConflictError,
+      ConflictError
     );
   });
 
@@ -142,7 +142,7 @@ describe('UserService.changeUsername', () => {
     const repo = makeRepo({ findById: vi.fn().mockResolvedValue(null) });
     const service = new UserService(repo as any);
     await expect(service.changeUsername('nonexistent', { username: 'newname' })).rejects.toThrow(
-      NotFoundError,
+      NotFoundError
     );
   });
 });

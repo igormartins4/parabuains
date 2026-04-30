@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 // Mock do modulo db para evitar conexao real
 vi.mock('@/lib/db', () => ({

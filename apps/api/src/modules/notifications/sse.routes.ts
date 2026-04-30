@@ -28,7 +28,7 @@ export async function sseRoutes(fastify: FastifyInstance) {
     reply.raw.flushHeaders();
 
     // Conexão Redis subscriber dedicada para este cliente
-    const redisUrl = process.env['REDIS_URL'] ?? 'redis://localhost:6379';
+    const redisUrl = process.env.REDIS_URL ?? 'redis://localhost:6379';
     const subscriber = new IORedis(redisUrl, {
       maxRetriesPerRequest: null,
       lazyConnect: true,
@@ -62,9 +62,12 @@ export async function sseRoutes(fastify: FastifyInstance) {
     }, 30_000);
 
     // Timeout após 5 minutos — cliente deve reconectar
-    const timeout = setTimeout(() => {
-      reply.raw.end();
-    }, 5 * 60 * 1000);
+    const timeout = setTimeout(
+      () => {
+        reply.raw.end();
+      },
+      5 * 60 * 1000
+    );
 
     // Cleanup ao fechar conexão
     const cleanup = async () => {

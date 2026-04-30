@@ -1,15 +1,15 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
 import bcrypt from 'bcryptjs';
+import { describe, expect, it, vi } from 'vitest';
 
 // Mock do banco
 const mockDelete = vi.fn().mockReturnThis();
-const mockWhere = vi.fn().mockReturnThis();
+const _mockWhere = vi.fn().mockReturnThis();
 const mockInsert = vi.fn().mockReturnThis();
-const mockValues = vi.fn().mockResolvedValue(undefined);
+const _mockValues = vi.fn().mockResolvedValue(undefined);
 const mockSelect = vi.fn().mockReturnThis();
-const mockFrom = vi.fn().mockReturnThis();
+const _mockFrom = vi.fn().mockReturnThis();
 const mockUpdate = vi.fn().mockReturnThis();
-const mockSet = vi.fn().mockReturnThis();
+const _mockSet = vi.fn().mockReturnThis();
 
 vi.mock('@/lib/db', () => ({
   db: {

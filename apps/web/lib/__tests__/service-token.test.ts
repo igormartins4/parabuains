@@ -1,6 +1,7 @@
 // @vitest-environment node
-import { describe, it, expect, beforeAll } from 'vitest';
+
 import { decodeJwt } from 'jose';
+import { beforeAll, describe, expect, it } from 'vitest';
 
 beforeAll(() => {
   process.env.API_JWT_SECRET = 'test-secret-min-32-chars-long-enough!';

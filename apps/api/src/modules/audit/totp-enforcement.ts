@@ -1,7 +1,7 @@
-import { getDb } from '../../infrastructure/db.js';
 import { users } from '@parabuains/db';
 import { eq } from 'drizzle-orm';
 import { TotpRequiredError } from '../../errors.js';
+import { getDb } from '../../infrastructure/db.js';
 
 /**
  * 2FA Enforcement Middleware
@@ -14,7 +14,7 @@ import { TotpRequiredError } from '../../errors.js';
  */
 export async function require2FAIfEnabled(
   userId: string,
-  twoFaVerifiedHeader: string | undefined,
+  twoFaVerifiedHeader: string | undefined
 ): Promise<void> {
   const db = getDb();
   const [user] = await db

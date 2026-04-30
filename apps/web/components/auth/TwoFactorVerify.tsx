@@ -19,7 +19,10 @@ export function TwoFactorVerify({
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleVerify() {
-    if (!code.trim()) { setError('Digite o codigo'); return; }
+    if (!code.trim()) {
+      setError('Digite o codigo');
+      return;
+    }
     setIsLoading(true);
     setError('');
     try {
@@ -43,7 +46,9 @@ export function TwoFactorVerify({
       <h3 className="text-base font-semibold text-gray-900">{title}</h3>
       {!isBackupCode ? (
         <>
-          <p className="text-sm text-gray-600">Digite o codigo de 6 digitos do seu app autenticador:</p>
+          <p className="text-sm text-gray-600">
+            Digite o codigo de 6 digitos do seu app autenticador:
+          </p>
           <input
             id="totp-code"
             type="text"
@@ -52,11 +57,14 @@ export function TwoFactorVerify({
             value={code}
             onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
             placeholder="000000"
-            autoFocus
             aria-label="Codigo de 6 digitos do autenticador"
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-center font-mono text-2xl tracking-widest focus:outline-none focus:ring-2 focus:ring-violet-500"
           />
-          <button onClick={() => setIsBackupCode(true)} className="text-xs text-violet-600 hover:underline">
+          <button
+            type="button"
+            onClick={() => setIsBackupCode(true)}
+            className="text-xs text-violet-600 hover:underline"
+          >
             Usar codigo de recuperacao
           </button>
         </>
@@ -70,11 +78,14 @@ export function TwoFactorVerify({
             onChange={(e) => setCode(e.target.value.toUpperCase())}
             placeholder="XXXXXXXXXX"
             maxLength={10}
-            autoFocus
             aria-label="Codigo de recuperacao"
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-center font-mono text-lg tracking-widest focus:outline-none focus:ring-2 focus:ring-violet-500"
           />
-          <button onClick={() => setIsBackupCode(false)} className="text-xs text-violet-600 hover:underline">
+          <button
+            type="button"
+            onClick={() => setIsBackupCode(false)}
+            className="text-xs text-violet-600 hover:underline"
+          >
             Usar codigo do autenticador
           </button>
         </>
@@ -82,11 +93,16 @@ export function TwoFactorVerify({
       {error && <p className="text-sm text-red-600">{error}</p>}
       <div className="flex gap-2">
         {onCancel && (
-          <button onClick={onCancel} className="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+          <button
+            type="button"
+            onClick={onCancel}
+            className="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+          >
             Cancelar
           </button>
         )}
         <button
+          type="button"
           onClick={handleVerify}
           disabled={isLoading || !code.trim()}
           className="flex-1 rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700 disabled:opacity-60"

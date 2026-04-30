@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { type FormEvent, useState } from 'react';
 import { authClient } from '@/lib/auth-client';
 
 export default function ForgotPasswordPage() {

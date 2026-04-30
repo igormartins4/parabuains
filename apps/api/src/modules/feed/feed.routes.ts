@@ -1,8 +1,8 @@
 import type { FastifyInstance } from 'fastify';
+import { AppError } from '../../errors.js';
+import { UserRepository } from '../users/user.repository.js';
 import { FeedRepository } from './feed.repository.js';
 import { FeedService } from './feed.service.js';
-import { UserRepository } from '../users/user.repository.js';
-import { AppError } from '../../errors.js';
 
 export async function feedRoutes(fastify: FastifyInstance) {
   const feedRepo = new FeedRepository();

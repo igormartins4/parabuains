@@ -2,7 +2,7 @@ export class AppError extends Error {
   constructor(
     public readonly statusCode: number,
     message: string,
-    public readonly code?: string,
+    public readonly code?: string
   ) {
     super(message);
     this.name = this.constructor.name;
@@ -44,7 +44,7 @@ export class TotpRequiredError extends AppError {
     super(
       403,
       'This operation requires TOTP verification. Please provide your 2FA code.',
-      'TOTP_REQUIRED',
+      'TOTP_REQUIRED'
     );
   }
 }

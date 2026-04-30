@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AuditRepository } from '../audit.repository.js';
 
 // Mock getDb to avoid real DB connection
@@ -49,14 +49,14 @@ describe('AuditRepository', () => {
           action: 'user.login',
           resource: 'user:user-123',
           ipAddress: '1.2.3.4',
-        }),
+        })
       );
     });
 
     it('insere com actorId null quando nao autenticado', async () => {
       await repo.insert({ action: 'user.register' });
       expect(mockDb.values).toHaveBeenCalledWith(
-        expect.objectContaining({ actorId: null, action: 'user.register' }),
+        expect.objectContaining({ actorId: null, action: 'user.register' })
       );
     });
 

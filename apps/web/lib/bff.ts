@@ -1,6 +1,6 @@
-import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
+import { auth } from '@/lib/auth';
 import { createServiceToken } from '@/lib/service-token';
 
 const INTERNAL_API_URL = process.env.INTERNAL_API_URL ?? 'http://localhost:3001';
@@ -8,7 +8,7 @@ const INTERNAL_API_URL = process.env.INTERNAL_API_URL ?? 'http://localhost:3001'
 export async function bffProxy(
   request: NextRequest,
   path: string,
-  options: { method?: string; body?: unknown } = {},
+  options: { method?: string; body?: unknown } = {}
 ): Promise<NextResponse> {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user) {

@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
+import { type NextRequest, NextResponse } from 'next/server';
+import { auth } from '@/lib/auth';
 import { createServiceToken } from '@/lib/service-token';
 
 const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -18,30 +18,24 @@ export async function POST(req: NextRequest) {
   if (!ALLOWED_MIME_TYPES.includes(mimeType)) {
     return NextResponse.json(
       { error: 'Invalid file type. Only JPEG, PNG, and WebP are allowed.' },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!fileSize || fileSize > MAX_FILE_SIZE) {
-    return NextResponse.json(
-      { error: 'File too large. Maximum size is 5MB.' },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: 'File too large. Maximum size is 5MB.' }, { status: 400 });
   }
 
   const serviceToken = await createServiceToken(session.user.id, session.session.id);
 
-  const apiResponse = await fetch(
-    `${process.env.INTERNAL_API_URL}/v1/users/me/avatar-url`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${serviceToken}`,
-      },
-      body: JSON.stringify({ mimeType, fileSize }),
+  const apiResponse = await fetch(`${process.env.INTERNAL_API_URL}/v1/users/me/avatar-url`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${serviceToken}`,
     },
-  );
+    body: JSON.stringify({ mimeType, fileSize }),
+  });
 
   if (!apiResponse.ok) {
     const error = await apiResponse.json().catch(() => ({}));

@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import type { FastifyReply, FastifyRequest } from 'fastify';
 import Fastify from 'fastify';
-import type { FastifyRequest, FastifyReply } from 'fastify';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock the AuditRepository
 const insertMock = vi.fn().mockResolvedValue(undefined);
@@ -53,9 +53,7 @@ describe('auditPlugin', () => {
     const res = await app.inject({ method: 'POST', url: '/test-audit' });
     expect(res.statusCode).toBe(200);
     expect(insertMock).toHaveBeenCalledOnce();
-    expect(insertMock).toHaveBeenCalledWith(
-      expect.objectContaining({ action: 'user.login' }),
-    );
+    expect(insertMock).toHaveBeenCalledWith(expect.objectContaining({ action: 'user.login' }));
   });
 
   it('NAO insere audit record quando statusCode >= 400', async () => {
@@ -82,7 +80,7 @@ describe('auditPlugin', () => {
         actorId: 'user-abc',
         action: 'user.profile_update',
         resource: 'user:user-abc',
-      }),
+      })
     );
   });
 });

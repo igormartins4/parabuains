@@ -54,9 +54,7 @@ export function UsernameForm({ currentUsername }: UsernameFormProps) {
               name="username"
               type="text"
               value={value}
-              onChange={(e) =>
-                setValue(e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, ''))
-              }
+              onChange={(e) => setValue(e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, ''))}
               className="w-full pl-32 pr-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-300 border-gray-300"
               maxLength={30}
               required

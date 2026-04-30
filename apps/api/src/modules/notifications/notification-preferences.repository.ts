@@ -1,6 +1,6 @@
-import { eq, and, sql } from 'drizzle-orm';
-import { getDb } from '../../infrastructure/db.js';
 import { notificationPreferences } from '@parabuains/db';
+import { eq, sql } from 'drizzle-orm';
+import { getDb } from '../../infrastructure/db.js';
 
 export type NotificationChannel = 'email' | 'push';
 
@@ -19,7 +19,7 @@ export interface INotificationPreferencesRepository {
     userId: string,
     channel: NotificationChannel,
     daysBefore: number[],
-    enabled: boolean,
+    enabled: boolean
   ): Promise<NotificationPreference>;
 }
 
@@ -50,7 +50,7 @@ export class DrizzleNotificationPreferencesRepository
     userId: string,
     channel: NotificationChannel,
     daysBefore: number[],
-    enabled: boolean,
+    enabled: boolean
   ): Promise<NotificationPreference> {
     const [row] = await this.db
       .insert(notificationPreferences)

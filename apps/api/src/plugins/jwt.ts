@@ -1,6 +1,6 @@
-import fp from 'fastify-plugin';
 import jwt from '@fastify/jwt';
 import type { FastifyInstance } from 'fastify';
+import fp from 'fastify-plugin';
 
 export default fp(async function jwtPlugin(app: FastifyInstance) {
   if (!process.env.API_JWT_SECRET) {

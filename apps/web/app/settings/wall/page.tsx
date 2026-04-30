@@ -1,7 +1,7 @@
-import { redirect } from 'next/navigation';
 import type { Metadata } from 'next';
-import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { auth } from '@/lib/auth';
 import { createServiceToken } from '@/lib/service-token';
 import { WallSettingsForm } from './WallSettingsForm';
 
@@ -13,7 +13,7 @@ async function fetchWallSettings(username: string, serviceToken: string) {
     {
       headers: { Authorization: `Bearer ${serviceToken}` },
       cache: 'no-store',
-    },
+    }
   );
   if (!res.ok) return null;
   return res.json() as Promise<{

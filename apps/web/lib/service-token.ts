@@ -1,5 +1,5 @@
+import { TextEncoder } from 'node:util';
 import { SignJWT } from 'jose';
-import { TextEncoder } from 'util';
 
 const SECRET = process.env.API_JWT_SECRET;
 const TOKEN_TTL_SECONDS = 60;

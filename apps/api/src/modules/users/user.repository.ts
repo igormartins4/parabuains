@@ -1,6 +1,6 @@
-import { eq, and, sql } from 'drizzle-orm';
+import { friendships, usernameHistory, users } from '@parabuains/db';
+import { and, eq, sql } from 'drizzle-orm';
 import { getDb } from '../../infrastructure/db.js';
-import { users, usernameHistory, friendships } from '@parabuains/db';
 
 export class UserRepository {
   private get db() {
@@ -17,11 +17,7 @@ export class UserRepository {
   }
 
   async findById(id: string) {
-    const [user] = await this.db
-      .select()
-      .from(users)
-      .where(eq(users.id, id))
-      .limit(1);
+    const [user] = await this.db.select().from(users).where(eq(users.id, id)).limit(1);
     return user ?? null;
   }
 
@@ -43,7 +39,7 @@ export class UserRepository {
       countdownVisibility: 'public' | 'friends';
       birthYearHidden: boolean;
       avatarUrl: string;
-    }>,
+    }>
   ) {
     const [updated] = await this.db
       .update(users)
@@ -72,7 +68,7 @@ export class UserRepository {
 
   async getMutualFriends(
     userAId: string,
-    userBId: string,
+    userBId: string
   ): Promise<{ count: number; sample: (typeof users.$inferSelect)[] }> {
     const mutuals = await this.db
       .select()
@@ -90,8 +86,8 @@ export class UserRepository {
             FROM friendships
             WHERE status = 'accepted'
             AND (requester_id = ${userBId} OR addressee_id = ${userBId})
-          )`,
-        ),
+          )`
+        )
       )
       .limit(5);
 
@@ -111,8 +107,8 @@ export class UserRepository {
             FROM friendships
             WHERE status = 'accepted'
             AND (requester_id = ${userBId} OR addressee_id = ${userBId})
-          )`,
-        ),
+          )`
+        )
       );
 
     return { count: Number(countResult[0]?.count ?? 0), sample: mutuals };
@@ -129,8 +125,8 @@ export class UserRepository {
             (${friendships.requesterId} = ${userAId} AND ${friendships.addresseeId} = ${userBId})
             OR
             (${friendships.requesterId} = ${userBId} AND ${friendships.addresseeId} = ${userAId})
-          )`,
-        ),
+          )`
+        )
       )
       .limit(1);
     return !!row;

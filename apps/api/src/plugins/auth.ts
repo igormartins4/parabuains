@@ -1,14 +1,18 @@
+import type { FastifyPluginAsync, FastifyReply, FastifyRequest } from 'fastify';
 import fp from 'fastify-plugin';
-import { FastifyPluginAsync, FastifyRequest, FastifyReply } from 'fastify';
 
 const authPlugin: FastifyPluginAsync = async (fastify) => {
   fastify.addHook('preHandler', async (request: FastifyRequest, reply: FastifyReply) => {
-    const routeConfig = (request.routeOptions?.config as unknown as Record<string, unknown> | undefined);
+    const routeConfig = request.routeOptions?.config as unknown as
+      | Record<string, unknown>
+      | undefined;
     if (routeConfig?.skipAuth) return;
 
     const authHeader = request.headers.authorization;
     if (!authHeader?.startsWith('Bearer ')) {
-      return reply.code(401).send({ error: 'Unauthorized', message: 'Missing authorization token' });
+      return reply
+        .code(401)
+        .send({ error: 'Unauthorized', message: 'Missing authorization token' });
     }
 
     try {
@@ -21,7 +25,9 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
 
   fastify.decorateRequest('userId', null);
   fastify.addHook('preHandler', async (request: FastifyRequest) => {
-    const routeConfig = (request.routeOptions?.config as unknown as Record<string, unknown> | undefined);
+    const routeConfig = request.routeOptions?.config as unknown as
+      | Record<string, unknown>
+      | undefined;
     if (routeConfig?.skipAuth) return;
     const payload = request.user as { sub?: string } | undefined;
     (request as FastifyRequest & { userId: string | null }).userId = payload?.sub ?? null;
@@ -34,5 +40,7 @@ export default fp(authPlugin, {
 });
 
 declare module 'fastify' {
-  interface FastifyRequest { userId: string | null; }
+  interface FastifyRequest {
+    userId: string | null;
+  }
 }

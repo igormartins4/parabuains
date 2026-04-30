@@ -1,16 +1,19 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { headers } from 'next/headers';
+import { type NextRequest, NextResponse } from 'next/server';
 import sharp from 'sharp';
 import { auth } from '@/lib/auth';
-import { headers } from 'next/headers';
 import { createServiceToken } from '@/lib/service-token';
-import { S3Client, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
 
 function getR2Client() {
   return new S3Client({
+    // biome-ignore lint/style/noNonNullAssertion: R2_ENDPOINT is required; validated at startup
     endpoint: process.env.R2_ENDPOINT!,
     region: 'auto',
     credentials: {
+      // biome-ignore lint/style/noNonNullAssertion: R2 credentials are required; validated at startup
       accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+      // biome-ignore lint/style/noNonNullAssertion: R2 credentials are required; validated at startup
       secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
     },
   });
@@ -71,17 +74,14 @@ export async function POST(req: NextRequest) {
 
   // 4. Notify Fastify API to update avatar_url in DB
   const serviceToken = await createServiceToken(session.user.id, session.session.id);
-  const apiResponse = await fetch(
-    `${process.env.INTERNAL_API_URL}/v1/users/me/avatar-confirm`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${serviceToken}`,
-      },
-      body: JSON.stringify({}),
+  const apiResponse = await fetch(`${process.env.INTERNAL_API_URL}/v1/users/me/avatar-confirm`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${serviceToken}`,
     },
-  );
+    body: JSON.stringify({}),
+  });
 
   if (!apiResponse.ok) {
     return NextResponse.json({ error: 'Failed to update avatar in database' }, { status: 500 });

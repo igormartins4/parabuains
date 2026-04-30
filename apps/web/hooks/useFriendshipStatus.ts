@@ -1,20 +1,15 @@
 'use client';
 import { useState, useTransition } from 'react';
+import type { FriendshipStatus } from '@/lib/api/friendships';
 import {
-  sendFriendRequest,
   acceptFriendRequest,
   declineOrRemoveFriendship,
+  sendFriendRequest,
 } from '@/lib/api/friendships';
-import type { FriendshipStatus } from '@/lib/api/friendships';
 
-export function useFriendshipStatus(
-  initialStatus: FriendshipStatus,
-  initialFriendshipId?: string,
-) {
+export function useFriendshipStatus(initialStatus: FriendshipStatus, initialFriendshipId?: string) {
   const [status, setStatus] = useState<FriendshipStatus>(initialStatus);
-  const [friendshipId, setFriendshipId] = useState<string | undefined>(
-    initialFriendshipId,
-  );
+  const [friendshipId, setFriendshipId] = useState<string | undefined>(initialFriendshipId);
   const [isPending, startTransition] = useTransition();
 
   const sendRequest = (addresseeId: string) => {
@@ -23,9 +18,7 @@ export function useFriendshipStatus(
         const result = await sendFriendRequest(addresseeId);
         setFriendshipId(result.id);
         setStatus('pending_sent');
-      } catch (e) {
-        console.error(e);
-      }
+      } catch (_e) {}
     });
   };
 
@@ -35,9 +28,7 @@ export function useFriendshipStatus(
       try {
         await acceptFriendRequest(friendshipId);
         setStatus('accepted');
-      } catch (e) {
-        console.error(e);
-      }
+      } catch (_e) {}
     });
   };
 
@@ -48,9 +39,7 @@ export function useFriendshipStatus(
         await declineOrRemoveFriendship(friendshipId);
         setFriendshipId(undefined);
         setStatus('none');
-      } catch (e) {
-        console.error(e);
-      }
+      } catch (_e) {}
     });
   };
 

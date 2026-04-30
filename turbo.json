@@ -27,6 +27,12 @@
     },
     "db:migrate": {
       "cache": false
+    },
+    "check": {
+      "outputs": []
+    },
+    "check:ci": {
+      "outputs": []
     }
   }
 }

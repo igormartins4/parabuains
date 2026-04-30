@@ -1,6 +1,6 @@
 import type { Redis } from 'ioredis';
-import { AuditRepository } from '../audit/audit.repository.js';
 import { TooManyRequestsError } from '../../errors.js';
+import type { AuditRepository } from '../audit/audit.repository.js';
 
 /**
  * AnomalyDetectionService — Redis threshold-based anomaly detection.
@@ -11,7 +11,7 @@ import { TooManyRequestsError } from '../../errors.js';
 export class AnomalyDetectionService {
   constructor(
     private readonly redis: Redis,
-    private readonly auditRepo: AuditRepository,
+    private readonly auditRepo: AuditRepository
   ) {}
 
   /**

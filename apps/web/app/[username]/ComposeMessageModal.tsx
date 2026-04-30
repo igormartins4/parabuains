@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useRef, useState } from 'react';
 
 interface ComposeMessageModalProps {
   username: string;
@@ -81,6 +81,9 @@ export function ComposeMessageModal({
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
+      onKeyDown={(e) => {
+        if (e.key === 'Escape') onClose();
+      }}
     >
       <div className="w-full max-w-lg rounded-xl bg-white p-6 shadow-xl dark:bg-zinc-900">
         <div className="mb-4 flex items-center justify-between">
@@ -88,6 +91,7 @@ export function ComposeMessageModal({
             Deixar mensagem para @{username}
           </h2>
           <button
+            type="button"
             onClick={onClose}
             aria-label="Fechar modal"
             className="rounded-md p-1 hover:bg-zinc-100 dark:hover:bg-zinc-800"

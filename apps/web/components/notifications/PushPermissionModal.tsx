@@ -16,8 +16,7 @@ export interface PushPermissionModalProps {
  * if the user explicitly clicks "Ativar notificações".
  */
 export function PushPermissionModal({ isOpen, onClose }: PushPermissionModalProps) {
-  const { isSupported, permission, isSubscribed, isLoading, subscribe, unsubscribe } =
-    usePushNotifications();
+  const { isSupported, permission, isSubscribed, isLoading, subscribe } = usePushNotifications();
 
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -33,6 +32,7 @@ export function PushPermissionModal({ isOpen, onClose }: PushPermissionModalProp
             Seu navegador não suporta notificações push. Tente usar um navegador mais recente.
           </p>
           <button
+            type="button"
             onClick={onClose}
             className="w-full py-2 px-4 bg-gray-100 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-200 transition-colors"
           >
@@ -53,6 +53,7 @@ export function PushPermissionModal({ isOpen, onClose }: PushPermissionModalProp
             configurações do site no seu navegador e permita notificações.
           </p>
           <button
+            type="button"
             onClick={onClose}
             className="w-full py-2 px-4 bg-gray-100 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-200 transition-colors"
           >
@@ -75,6 +76,7 @@ export function PushPermissionModal({ isOpen, onClose }: PushPermissionModalProp
             Você receberá lembretes de aniversário e outras notificações importantes.
           </p>
           <button
+            type="button"
             onClick={onClose}
             className="w-full py-2 px-4 bg-indigo-600 text-white rounded-xl text-sm font-medium hover:bg-indigo-700 transition-colors"
           >
@@ -91,9 +93,7 @@ export function PushPermissionModal({ isOpen, onClose }: PushPermissionModalProp
       await subscribe();
       setSuccess(true);
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Não foi possível ativar as notificações.',
-      );
+      setError(err instanceof Error ? err.message : 'Não foi possível ativar as notificações.');
     }
   }
 
@@ -118,6 +118,7 @@ export function PushPermissionModal({ isOpen, onClose }: PushPermissionModalProp
 
         <div className="space-y-2">
           <button
+            type="button"
             onClick={() => void handleActivate()}
             disabled={isLoading}
             className="w-full py-2.5 px-4 bg-indigo-600 text-white rounded-xl text-sm font-medium hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
@@ -125,6 +126,7 @@ export function PushPermissionModal({ isOpen, onClose }: PushPermissionModalProp
             {isLoading ? 'Ativando...' : 'Ativar notificações'}
           </button>
           <button
+            type="button"
             onClick={onClose}
             disabled={isLoading}
             className="w-full py-2 px-4 bg-gray-100 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-200 disabled:opacity-50 transition-colors"
