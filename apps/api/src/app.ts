@@ -9,6 +9,8 @@ import sensiblePlugin from './plugins/sensible.js';
 import { healthRoutes } from './modules/health/routes.js';
 import { usersPlugin } from './modules/users/user.plugin.js';
 import { friendshipsPlugin } from './modules/friendships/friendship.plugin.js';
+import { feedPlugin } from './modules/feed/feed.plugin.js';
+import { ssePlugin } from './modules/notifications/sse.plugin.js';
 
 export async function buildApp() {
   const app = Fastify({
@@ -35,6 +37,8 @@ export async function buildApp() {
   await app.register(healthRoutes, { prefix: '/v1' });
   await app.register(usersPlugin, { prefix: '/v1' });
   await app.register(friendshipsPlugin, { prefix: '/v1' });
+  await app.register(feedPlugin, { prefix: '/v1' });
+  await app.register(ssePlugin, { prefix: '/v1' });
 
   return app;
 }
