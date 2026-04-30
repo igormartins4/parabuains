@@ -1,3 +1,5 @@
+import { getBaseUrl } from './base-url';
+
 export interface BirthdayEntry {
   userId: string;
   username: string;
@@ -15,7 +17,7 @@ export interface BirthdayFeed {
 }
 
 export async function getBirthdayFeed(): Promise<BirthdayFeed> {
-  const res = await fetch('/api/feed/birthdays');
+  const res = await fetch(`${getBaseUrl()}/api/feed/birthdays`);
   if (!res.ok) throw new Error('Failed to fetch birthday feed');
   return res.json() as Promise<BirthdayFeed>;
 }

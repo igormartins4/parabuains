@@ -3,6 +3,16 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   experimental: {},
+  // Transpile workspace packages that use ESM with .js extensions
+  transpilePackages: ['@parabuains/db'],
+  webpack(config) {
+    // Allow webpack to resolve .js imports as .ts/.tsx in transpiled packages
+    config.resolve.extensionAlias = {
+      ...config.resolve.extensionAlias,
+      '.js': ['.ts', '.tsx', '.js'],
+    };
+    return config;
+  },
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: '*.r2.dev' },

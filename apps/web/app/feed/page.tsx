@@ -4,6 +4,7 @@ import { getBirthdayFeed } from '@/lib/api/feed';
 import { BirthdayCard } from './BirthdayCard';
 import { NotificationBadge } from './NotificationBadge';
 
+export const dynamic = 'force-dynamic';
 export const metadata: Metadata = { title: 'Feed de Aniversários — Parabuains' };
 
 async function FeedContent() {
