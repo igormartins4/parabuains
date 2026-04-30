@@ -57,8 +57,11 @@
 9. **[2026-04-29] drizzle-orm nao resolve no vitest sem alias explicito**
    Do instead: adicionar `'drizzle-orm': resolve('../../packages/db/node_modules/drizzle-orm')` no alias do vitest.config.ts.
 
-10. **[2026-04-29] @fastify/rate-limit usa redis.rateLimit() internamente — Proxy quebra**
+10. **[2026-04-30] @fastify/rate-limit usa redis.rateLimit() internamente — Proxy quebra**
     Do instead: em NODE_ENV=test, passar `redis: undefined` ao plugin de rate-limit para usar in-memory store.
+
+11. **[2026-04-30] pnpm workspace: duas instâncias do mesmo pacote causam incompatibilidade de tipos TS**
+    Do instead: quando `PgTableWithColumns not assignable to PgTable<TableConfig>`, verificar se há múltiplas instâncias físicas (`(Get-Item node_modules/pkg).Target`). Usar `"pnpm": { "overrides": { "pkg": "version" } }` no package.json raiz para forçar deduplication.
 
 ## User Directives
 1. **[2026-04-29] Responder sempre em portugues**

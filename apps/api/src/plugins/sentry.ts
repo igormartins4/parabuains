@@ -16,9 +16,10 @@ export default fp(async function sentryPlugin(app: FastifyInstance) {
     }
 
     // Fastify validation errors (400) — don't capture
-    const statusCode = (error as { statusCode?: number }).statusCode ?? 500;
+    const err = error as { statusCode?: number; message?: string };
+    const statusCode = err.statusCode ?? 500;
     if (statusCode < 500) {
-      reply.code(statusCode).send({ error: 'ERROR', message: error.message });
+      reply.code(statusCode).send({ error: 'ERROR', message: err.message ?? 'Request error' });
       return;
     }
 
