@@ -45,6 +45,7 @@ export function TwoFactorVerify({
         <>
           <p className="text-sm text-gray-600">Digite o codigo de 6 digitos do seu app autenticador:</p>
           <input
+            id="totp-code"
             type="text"
             inputMode="numeric"
             maxLength={6}
@@ -52,6 +53,7 @@ export function TwoFactorVerify({
             onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
             placeholder="000000"
             autoFocus
+            aria-label="Codigo de 6 digitos do autenticador"
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-center font-mono text-2xl tracking-widest focus:outline-none focus:ring-2 focus:ring-violet-500"
           />
           <button onClick={() => setIsBackupCode(true)} className="text-xs text-violet-600 hover:underline">
@@ -62,12 +64,14 @@ export function TwoFactorVerify({
         <>
           <p className="text-sm text-gray-600">Digite um dos seus codigos de recuperacao:</p>
           <input
+            id="backup-code"
             type="text"
             value={code}
             onChange={(e) => setCode(e.target.value.toUpperCase())}
             placeholder="XXXXXXXXXX"
             maxLength={10}
             autoFocus
+            aria-label="Codigo de recuperacao"
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-center font-mono text-lg tracking-widest focus:outline-none focus:ring-2 focus:ring-violet-500"
           />
           <button onClick={() => setIsBackupCode(false)} className="text-xs text-violet-600 hover:underline">

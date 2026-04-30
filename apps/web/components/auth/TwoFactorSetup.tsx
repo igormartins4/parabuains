@@ -107,14 +107,16 @@ export function TwoFactorSetup({ onSuccess }: TwoFactorSetupProps) {
           <code className="mt-2 block break-all rounded bg-gray-100 p-2 font-mono text-xs">{manualCode}</code>
         </details>
         <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">Codigo do app (6 digitos):</label>
+          <label htmlFor="totp-code-setup" className="text-sm font-medium text-gray-700">Codigo do app (6 digitos):</label>
           <input
+            id="totp-code-setup"
             type="text"
             inputMode="numeric"
             maxLength={6}
             value={totpCode}
             onChange={(e) => setTotpCode(e.target.value.replace(/\D/g, ''))}
             placeholder="000000"
+            aria-label="Codigo de verificação do autenticador"
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-center font-mono text-lg tracking-widest focus:outline-none focus:ring-2 focus:ring-violet-500"
           />
         </div>
