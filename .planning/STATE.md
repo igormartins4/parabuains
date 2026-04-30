@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-04-29)
 
 ## Current Position
 
-Phase: 1 of 7 (Foundation & Infrastructure)
-Plan: 0 of 5 in current phase
-Status: Ready to execute — all 7 phases planned, all CONTEXTs and PLANs written
-Last activity: 2026-04-29 — All 24 plans (Phases 1–7) written and ready for execution
+Phase: 4 of 7 (Social Graph)
+Plan: 2 of 3 in current phase (04-02 complete)
+Status: Executing — Phase 4 Plan 03 is next
+Last activity: 2026-04-30 — 04-02 (Birthday Feed + SSE + BullMQ) complete
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [██████░░░░] ~40% (Phases 1-3 assumed complete, 04-01 and 04-02 done)
 
 ## Planning Complete — Full Plan Inventory
 
@@ -32,15 +32,15 @@ Progress: [░░░░░░░░░░] 0%
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 0
-- Average duration: —
-- Total execution time: —
+- Total plans completed: 2 (04-01, 04-02)
+- Average duration: ~45 min/plan
+- Total execution time: ~90 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| - | - | - | - |
+| 04-social-graph | 2 | ~90min | ~45min |
 
 *Updated after each plan completion*
 
@@ -92,6 +92,6 @@ None — all phases planned, ready to start executing Phase 1.
 
 ## Session Continuity
 
-Last session: 2026-04-29
-Stopped at: All 24 plans written (Phases 1–7); ready to execute Phase 1 Plan 01
-Resume file: None — start with `01-01-PLAN.md`
+Last session: 2026-04-30
+Stopped at: 04-02-PLAN.md complete; next is 04-03-PLAN.md
+Resume file: .planning/phases/04-social-graph/04-03-PLAN.md
