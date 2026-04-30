@@ -53,14 +53,14 @@
 
 ### Notifications
 
-- [ ] **NOTF-01**: Usuario recebe lembrete por e-mail antes do aniversario de amigo (antecedencia configuravel)
-- [ ] **NOTF-02**: Usuario recebe notificacao push web antes do aniversario de amigo
-- [ ] **NOTF-03**: Usuario recebe lembrete no proprio dia do aniversario do amigo (e-mail + push)
-- [ ] **NOTF-04**: Usuario pode configurar antecedencia dos lembretes (1, 3, 7 dias)
-- [ ] **NOTF-05**: Usuario recebe notificacao quando alguem escreve no seu mural
-- [ ] **NOTF-06**: Usuario recebe notificacao quando pedido de amizade e aceito
-- [ ] **NOTF-07**: Usuario pode configurar preferencias de notificacao por canal e tipo de evento
-- [ ] **NOTF-08**: Notificacoes de aniversario sao agendadas considerando o timezone do usuario
+- [x] **NOTF-01**: Usuario recebe lembrete por e-mail antes do aniversario de amigo (antecedencia configuravel)
+- [x] **NOTF-02**: Usuario recebe notificacao push web antes do aniversario de amigo
+- [x] **NOTF-03**: Usuario recebe lembrete no proprio dia do aniversario do amigo (e-mail + push)
+- [x] **NOTF-04**: Usuario pode configurar antecedencia dos lembretes (1, 3, 7 dias)
+- [x] **NOTF-05**: Usuario recebe notificacao quando alguem escreve no seu mural
+- [x] **NOTF-06**: Usuario recebe notificacao quando pedido de amizade e aceito
+- [x] **NOTF-07**: Usuario pode configurar preferencias de notificacao por canal e tipo de evento
+- [x] **NOTF-08**: Notificacoes de aniversario sao agendadas considerando o timezone do usuario
 
 ## v2 Requirements
 
@@ -136,14 +136,14 @@
 | MSG-05 | Phase 5 — Message Wall | Pending |
 | MSG-06 | Phase 5 — Message Wall | Pending |
 | MSG-07 | Phase 5 — Message Wall | Pending |
-| NOTF-01 | Phase 6 — Notifications | Pending |
-| NOTF-02 | Phase 6 — Notifications | Pending |
-| NOTF-03 | Phase 6 — Notifications | Pending |
-| NOTF-04 | Phase 6 — Notifications | Pending |
-| NOTF-05 | Phase 6 — Notifications | Pending |
-| NOTF-06 | Phase 6 — Notifications | Pending |
-| NOTF-07 | Phase 6 — Notifications | Pending |
-| NOTF-08 | Phase 6 — Notifications | Pending |
+| NOTF-01 | Phase 6 — Notifications | Complete |
+| NOTF-02 | Phase 6 — Notifications | Complete |
+| NOTF-03 | Phase 6 — Notifications | Complete |
+| NOTF-04 | Phase 6 — Notifications | Complete |
+| NOTF-05 | Phase 6 — Notifications | Complete |
+| NOTF-06 | Phase 6 — Notifications | Complete |
+| NOTF-07 | Phase 6 — Notifications | Complete |
+| NOTF-08 | Phase 6 — Notifications | Complete |
 
 > **Note:** Phase 1 (Foundation & Infrastructure) and Phase 7 (Security Hardening & Polish) cover no specific REQUIREMENTS.md entries — Phase 1 is infrastructure-only; Phase 7 audits cross-cutting security concerns from all prior phases.
 

@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 3: User Profiles** - Perfil completo, página pública `/usuario` e controles de privacidade
 - [ ] **Phase 4: Social Graph** - Sistema de amizade bilateral e feed de aniversários
 - [ ] **Phase 5: Message Wall** - Mural de mensagens públicas, privadas e anônimas com moderação
-- [ ] **Phase 6: Notifications** - Lembretes por e-mail e push web com agendamento por timezone
+- [ ] **Phase 6: Notifications** - Lembretes por e-mail e push web com agendamento por timezone ✅
 - [ ] **Phase 7: Security Hardening & Polish** - Auditoria de segurança, anomaly detection e polish final
 
 ## Phase Details
@@ -130,9 +130,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 06-01-PLAN.md — Email notifications: Resend transport + React Email templates + BullMQ consumers + preferences API
-- [ ] 06-02-PLAN.md — Web Push: VAPID transport + service worker + push subscribe API + double-confirm UX
-- [ ] 06-03-PLAN.md — Birthday scheduler: BullMQ daily cron (timezone-aware delay) + notification preferences settings UI
+- [x] 06-01-PLAN.md — Email notifications: Resend transport + React Email templates + BullMQ consumers + preferences API
+- [x] 06-02-PLAN.md — Web Push: VAPID transport + service worker + push subscribe API + double-confirm UX
+- [x] 06-03-PLAN.md — Birthday scheduler: BullMQ daily cron (timezone-aware delay) + notification preferences settings UI
 
 **UI hint**: yes
 
@@ -166,5 +166,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 3. User Profiles | 0/4 | Not started | - |
 | 4. Social Graph | 0/3 | Not started | - |
 | 5. Message Wall | 0/2 | Not started | - |
-| 6. Notifications | 0/3 | Not started | - |
+| 6. Notifications | 3/3 | Complete | 2026-04-30 |
 | 7. Security Hardening & Polish | 0/3 | Not started | - |

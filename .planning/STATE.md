@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-04-29)
 
 ## Current Position
 
-Phase: 5 of 7 (Message Wall)
-Plan: 2 of 2 in current phase (05-02 complete)
-Status: Phase 5 complete — Phase 6 (Notifications) is next
-Last activity: 2026-04-30 — 05-01 (Wall Messages API) and 05-02 (Wall Messages UI) complete
+Phase: 6 of 7 (Notifications)
+Plan: 3 of 3 in current phase (06-03 complete)
+Status: Phase 6 complete — Phase 7 (Security Hardening & Polish) is next
+Last activity: 2026-04-30 — 06-01 (Email Notifications), 06-02 (Web Push), 06-03 (Birthday Scheduler) complete
 
-Progress: [████████░░] ~55% (Phases 1-4 complete, Phase 5 complete)
+Progress: [█████████░] ~78% (Phases 1-5 complete, Phase 6 complete)
 
 ## Planning Complete — Full Plan Inventory
 
@@ -32,9 +32,9 @@ Progress: [████████░░] ~55% (Phases 1-4 complete, Phase 5 co
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 4 (04-01, 04-02, 05-01, 05-02)
-- Average duration: ~40 min/plan
-- Total execution time: ~160 min
+- Total plans completed: 7 (04-01, 04-02, 05-01, 05-02, 06-01, 06-02, 06-03)
+- Average duration: ~35 min/plan
+- Total execution time: ~245 min
 
 **By Phase:**
 
@@ -42,6 +42,7 @@ Progress: [████████░░] ~55% (Phases 1-4 complete, Phase 5 co
 |-------|-------|-------|----------|
 | 04-social-graph | 2 | ~90min | ~45min |
 | 05-messages | 2 | ~70min | ~35min |
+| 06-notifications | 3 | ~85min | ~28min |
 
 *Updated after each plan completion*
 
@@ -94,5 +95,5 @@ None — all phases planned, ready to start executing Phase 1.
 ## Session Continuity
 
 Last session: 2026-04-30
-Stopped at: 05-02-PLAN.md complete; Phase 5 done; next is 06-01-PLAN.md
-Resume file: .planning/phases/06-notifications/06-01-PLAN.md
+Stopped at: 06-03-PLAN.md complete; Phase 6 done; next is 07-01-PLAN.md
+Resume file: .planning/phases/07-hardening/07-01-PLAN.md
