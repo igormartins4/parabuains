@@ -15,6 +15,9 @@ import type { FriendshipStatus } from '@/lib/api/friendships';
 import { WallSection } from './WallSection';
 import { getWallMessages } from '@/lib/api/messages';
 
+// ISR: revalidate profile page every 1 hour
+export const revalidate = 3600;
+
 interface ProfilePageProps {
   params: Promise<{ username: string }>;
 }
