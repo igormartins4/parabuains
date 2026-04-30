@@ -8,6 +8,8 @@ import {
   searchQuerySchema,
 } from './friendship.schemas.js';
 import { AppError } from '../../errors.js';
+import { notificationsQueue, type FriendshipAcceptedJob } from '../../queues/notifications.queue.js';
+import { publishUserEvent } from '../../lib/redis-pub.js';
 
 export async function friendshipRoutes(fastify: FastifyInstance) {
   const repo = new FriendshipRepository();
@@ -75,6 +77,23 @@ export async function friendshipRoutes(fastify: FastifyInstance) {
     }
     const { id } = friendshipIdParamsSchema.parse(request.params);
     const result = await service.acceptRequest(id, request.userId);
+
+    // Enqueue BullMQ job para Fase 6 consumir
+    const job: FriendshipAcceptedJob = {
+      type: 'friendship_accepted',
+      recipientId: result.requesterId, // quem enviou o pedido original
+      actorId: result.addresseeId, // quem aceitou
+      friendshipId: result.id,
+    };
+    await notificationsQueue.add('friendship_accepted', job);
+
+    // Publicar evento SSE para notificação in-app imediata
+    await publishUserEvent(result.requesterId, {
+      type: 'friendship_accepted',
+      actorId: result.addresseeId,
+      friendshipId: result.id,
+    });
+
     return reply.send(result);
   });
 
