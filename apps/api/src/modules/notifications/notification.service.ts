@@ -5,6 +5,8 @@ import type {
 } from './notification-preferences.repository.js';
 import type { INotificationLogRepository } from './notification-log.repository.js';
 import type { EmailTransport } from './email.transport.js';
+import type { VapidTransport } from './vapid.transport.js';
+import type { IPushSubscriptionRepository } from './push-subscription.repository.js';
 
 export interface IUserLookup {
   findById(id: string): Promise<{
@@ -21,6 +23,8 @@ export class NotificationService {
     private readonly logRepo: INotificationLogRepository,
     private readonly emailTransport: EmailTransport,
     private readonly userRepo: IUserLookup,
+    private readonly vapidTransport: VapidTransport | null = null,
+    private readonly pushSubRepo: IPushSubscriptionRepository | null = null,
   ) {}
 
   async getPreferences(userId: string): Promise<NotificationPreference[]> {
@@ -38,7 +42,7 @@ export class NotificationService {
 
   /**
    * Called by BullMQ worker when a wall message is posted.
-   * Sends email notification to the wall owner if email pref is enabled.
+   * Sends email + push notification to the wall owner per their preferences.
    */
   async handleWallMessagePosted(
     profileId: string,
@@ -48,45 +52,66 @@ export class NotificationService {
     if (!profile) return;
 
     const prefs = await this.prefsRepo.getByUserId(profileId);
-    const emailPref = prefs.find((p) => p.channel === 'email');
-    if (!emailPref?.enabled) return;
+    const subjectId = authorId ?? profileId;
 
-    let senderName: string | null = null;
-    if (authorId) {
-      const author = await this.userRepo.findById(authorId);
-      senderName = author?.displayName ?? null;
+    // ── Email delivery ────────────────────────────────────────────────────────
+    const emailPref = prefs.find((p) => p.channel === 'email');
+    if (emailPref?.enabled) {
+      let senderName: string | null = null;
+      if (authorId) {
+        const author = await this.userRepo.findById(authorId);
+        senderName = author?.displayName ?? null;
+      }
+      try {
+        await this.emailTransport.sendWallMessageNotification({
+          to: profile.email,
+          recipientName: profile.displayName,
+          senderName,
+          profileUsername: profile.username,
+        });
+        await this.logRepo.create({
+          recipientId: profileId,
+          subjectId,
+          channel: 'email',
+          reminderType: 'Dday',
+          status: 'sent',
+        });
+      } catch (err) {
+        await this.logRepo.create({
+          recipientId: profileId,
+          subjectId,
+          channel: 'email',
+          reminderType: 'Dday',
+          status: 'failed',
+          errorMessage: err instanceof Error ? err.message : String(err),
+        });
+      }
     }
 
-    try {
-      await this.emailTransport.sendWallMessageNotification({
-        to: profile.email,
-        recipientName: profile.displayName,
-        senderName,
-        profileUsername: profile.username,
-      });
-
-      await this.logRepo.create({
-        recipientId: profileId,
-        subjectId: authorId ?? profileId,
-        channel: 'email',
-        reminderType: 'Dday',
-        status: 'sent',
-      });
-    } catch (err) {
-      await this.logRepo.create({
-        recipientId: profileId,
-        subjectId: authorId ?? profileId,
-        channel: 'email',
-        reminderType: 'Dday',
-        status: 'failed',
-        errorMessage: err instanceof Error ? err.message : String(err),
-      });
+    // ── Push delivery ─────────────────────────────────────────────────────────
+    const pushPref = prefs.find((p) => p.channel === 'push');
+    if (pushPref?.enabled && this.vapidTransport && this.pushSubRepo) {
+      const subs = await this.pushSubRepo.findByUserId(profileId);
+      for (const sub of subs) {
+        try {
+          const result = await this.vapidTransport.sendPushNotification(sub, {
+            title: 'Nova mensagem no seu mural',
+            body: 'Você recebeu uma mensagem no seu mural do Parabuains.',
+            url: `/${profile.username}`,
+          });
+          if (result === 'invalid_endpoint') {
+            await this.pushSubRepo.deleteByEndpoint(sub.endpoint);
+          }
+        } catch {
+          // Continue with other subscriptions if one fails
+        }
+      }
     }
   }
 
   /**
    * Called by BullMQ worker when a friendship request is accepted.
-   * Notifies the original requester (recipientId) that their request was accepted.
+   * Notifies the original requester (recipientId) per their preferences.
    */
   async handleFriendshipAccepted(
     recipientId: string,
@@ -95,37 +120,73 @@ export class NotificationService {
     const recipient = await this.userRepo.findById(recipientId);
     if (!recipient) return;
 
-    const prefs = await this.prefsRepo.getByUserId(recipientId);
-    const emailPref = prefs.find((p) => p.channel === 'email');
-    if (!emailPref?.enabled) return;
-
     const actor = await this.userRepo.findById(actorId);
     if (!actor) return;
 
-    try {
-      await this.emailTransport.sendFriendshipAcceptedNotification({
-        to: recipient.email,
-        recipientName: recipient.displayName,
-        friendName: actor.displayName,
-        friendUsername: actor.username,
-      });
+    const prefs = await this.prefsRepo.getByUserId(recipientId);
 
-      await this.logRepo.create({
-        recipientId,
-        subjectId: actorId,
-        channel: 'email',
-        reminderType: 'Dday',
-        status: 'sent',
-      });
-    } catch (err) {
-      await this.logRepo.create({
-        recipientId,
-        subjectId: actorId,
-        channel: 'email',
-        reminderType: 'Dday',
-        status: 'failed',
-        errorMessage: err instanceof Error ? err.message : String(err),
-      });
+    // ── Email delivery ────────────────────────────────────────────────────────
+    const emailPref = prefs.find((p) => p.channel === 'email');
+    if (emailPref?.enabled) {
+      try {
+        await this.emailTransport.sendFriendshipAcceptedNotification({
+          to: recipient.email,
+          recipientName: recipient.displayName,
+          friendName: actor.displayName,
+          friendUsername: actor.username,
+        });
+        await this.logRepo.create({
+          recipientId,
+          subjectId: actorId,
+          channel: 'email',
+          reminderType: 'Dday',
+          status: 'sent',
+        });
+      } catch (err) {
+        await this.logRepo.create({
+          recipientId,
+          subjectId: actorId,
+          channel: 'email',
+          reminderType: 'Dday',
+          status: 'failed',
+          errorMessage: err instanceof Error ? err.message : String(err),
+        });
+      }
     }
+
+    // ── Push delivery ─────────────────────────────────────────────────────────
+    const pushPref = prefs.find((p) => p.channel === 'push');
+    if (pushPref?.enabled && this.vapidTransport && this.pushSubRepo) {
+      const subs = await this.pushSubRepo.findByUserId(recipientId);
+      for (const sub of subs) {
+        try {
+          const result = await this.vapidTransport.sendPushNotification(sub, {
+            title: `${actor.displayName} aceitou sua amizade`,
+            body: 'Agora vocês são amigos no Parabuains!',
+            url: `/${actor.username}`,
+          });
+          if (result === 'invalid_endpoint') {
+            await this.pushSubRepo.deleteByEndpoint(sub.endpoint);
+          }
+        } catch {
+          // Continue with other subscriptions if one fails
+        }
+      }
+    }
+  }
+
+  /** Save a push subscription for a user. */
+  async savePushSubscription(
+    userId: string,
+    sub: { endpoint: string; p256dhKey: string; authKey: string; userAgent?: string },
+  ): Promise<void> {
+    if (!this.pushSubRepo) throw new Error('Push subscription repository not configured');
+    await this.pushSubRepo.save(userId, sub);
+  }
+
+  /** Delete a push subscription by endpoint. */
+  async deletePushSubscription(endpoint: string): Promise<void> {
+    if (!this.pushSubRepo) throw new Error('Push subscription repository not configured');
+    await this.pushSubRepo.deleteByEndpoint(endpoint);
   }
 }
