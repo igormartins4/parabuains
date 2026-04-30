@@ -148,9 +148,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 07-01-PLAN.md — Audit log: Fastify onSend hook, AuditRepository, 12 sensitive routes, 90-day cleanup job
-- [ ] 07-02-PLAN.md — Anomaly detection (Redis thresholds) + 2FA enforcement on sensitive ops + rate limiting audit
-- [ ] 07-03-PLAN.md — CSP tightening + loading skeletons + error boundaries + a11y + final test suite + launch checklist
+- [x] 07-01-PLAN.md — Audit log: Fastify onSend hook, AuditRepository, 12 sensitive routes, 90-day cleanup job
+- [x] 07-02-PLAN.md — Anomaly detection (Redis thresholds) + 2FA enforcement on sensitive ops + rate limiting audit
+- [x] 07-03-PLAN.md — CSP tightening + loading skeletons + error boundaries + a11y + final test suite + launch checklist
 
 **UI hint**: no
 
@@ -167,4 +167,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 4. Social Graph | 0/3 | Not started | - |
 | 5. Message Wall | 0/2 | Not started | - |
 | 6. Notifications | 3/3 | Complete | 2026-04-30 |
-| 7. Security Hardening & Polish | 0/3 | Not started | - |
+| 7. Security Hardening & Polish | 3/3 | Complete | 2026-04-30 |
