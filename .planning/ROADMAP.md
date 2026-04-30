@@ -12,13 +12,13 @@ Parabuains é construído em 7 fases que seguem a dependência natural da arquit
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation & Infrastructure** - Monorepo, banco de dados, Redis e scaffolding completo do stack
-- [ ] **Phase 2: Authentication & Security Foundation** - Login seguro (email/senha + OAuth) com proteção em camadas
-- [ ] **Phase 3: User Profiles** - Perfil completo, página pública `/usuario` e controles de privacidade
-- [ ] **Phase 4: Social Graph** - Sistema de amizade bilateral e feed de aniversários
-- [ ] **Phase 5: Message Wall** - Mural de mensagens públicas, privadas e anônimas com moderação
-- [ ] **Phase 6: Notifications** - Lembretes por e-mail e push web com agendamento por timezone ✅
-- [ ] **Phase 7: Security Hardening & Polish** - Auditoria de segurança, anomaly detection e polish final
+- [x] **Phase 1: Foundation & Infrastructure** - Monorepo, banco de dados, Redis e scaffolding completo do stack
+- [x] **Phase 2: Authentication & Security Foundation** - Login seguro (email/senha + OAuth) com proteção em camadas
+- [x] **Phase 3: User Profiles** - Perfil completo, página pública `/usuario` e controles de privacidade
+- [x] **Phase 4: Social Graph** - Sistema de amizade bilateral e feed de aniversários
+- [x] **Phase 5: Message Wall** - Mural de mensagens públicas, privadas e anônimas com moderação
+- [x] **Phase 6: Notifications** - Lembretes por e-mail e push web com agendamento por timezone
+- [x] **Phase 7: Security Hardening & Polish** - Auditoria de segurança, anomaly detection e polish final
 
 ## Phase Details
 
@@ -35,11 +35,11 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 5 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Monorepo root: Turborepo + pnpm workspace + turbo.json + .env.example
-- [ ] 01-02-PLAN.md — Fastify v5 app: plugins (helmet/cors/rate-limit/jwt/swagger) + /health endpoint
-- [ ] 01-03-PLAN.md — Drizzle schema package: all 8 DB tables + migrations
-- [ ] 01-04-PLAN.md — Next.js 16 scaffold: App Router + Tailwind v4
-- [ ] 01-05-PLAN.md — CI pipeline (GitHub Actions) + Vitest smoke tests
+- [x] 01-01-PLAN.md — Monorepo root: Turborepo + pnpm workspace + turbo.json + .env.example
+- [x] 01-02-PLAN.md — Fastify v5 app: plugins (helmet/cors/rate-limit/jwt/swagger) + /health endpoint
+- [x] 01-03-PLAN.md — Drizzle schema package: all 8 DB tables + migrations
+- [x] 01-04-PLAN.md — Next.js 16 scaffold: App Router + Tailwind v4
+- [x] 01-05-PLAN.md — CI pipeline (GitHub Actions) + Vitest smoke tests
 
 **UI hint**: no
 
@@ -56,10 +56,10 @@ Plans:
 **Plans**: 4 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — better-auth setup + Drizzle adapter + Resend email (verification + reset)
-- [ ] 02-02-PLAN.md — Google OAuth + account linking (no duplicate emails)
-- [ ] 02-03-PLAN.md — 2FA TOTP + 8 backup codes + setup UI
-- [ ] 02-04-PLAN.md — Auth UI pages + honeypot + lockout + BFF service token + Fastify guard
+- [x] 02-01-PLAN.md — better-auth setup + Drizzle adapter + Resend email (verification + reset)
+- [x] 02-02-PLAN.md — Google OAuth + account linking (no duplicate emails)
+- [x] 02-03-PLAN.md — 2FA TOTP + 8 backup codes + setup UI
+- [x] 02-04-PLAN.md — Auth UI pages + honeypot + lockout + BFF service token + Fastify guard
 
 **UI hint**: yes
 
@@ -75,10 +75,10 @@ Plans:
 **Plans**: 4 plans
 
 Plans:
-- [ ] 03-01-PLAN.md — Profile API (Fastify): GET/PUT profile, username change, mutual friends
-- [ ] 03-02-PLAN.md — Avatar upload: R2 presigned URL + Sharp processing (400×400 webp)
-- [ ] 03-03-PLAN.md — Public profile page (RSC), privacy enforcement, countdown, sharing
-- [ ] 03-04-PLAN.md — OG card (@vercel/og) + profile settings UI (privacy, countdown, birth year)
+- [x] 03-01-PLAN.md — Profile API (Fastify): GET/PUT profile, username change, mutual friends
+- [x] 03-02-PLAN.md — Avatar upload: R2 presigned URL + Sharp processing (400×400 webp)
+- [x] 03-03-PLAN.md — Public profile page (RSC), privacy enforcement, countdown, sharing
+- [x] 03-04-PLAN.md — OG card (@vercel/og) + profile settings UI (privacy, countdown, birth year)
 
 **UI hint**: yes
 
@@ -94,9 +94,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 04-01-PLAN.md — Friendship API: send/accept/reject/block/remove + user search + suggestions
-- [ ] 04-02-PLAN.md — Birthday feed (30 days, timezone-aware) + SSE in-app notifications + BullMQ stubs
-- [ ] 04-03-PLAN.md — Social UI: feed page, friends list, requests inbox, search, profile integration
+- [x] 04-01-PLAN.md — Friendship API: send/accept/reject/block/remove + user search + suggestions
+- [x] 04-02-PLAN.md — Birthday feed (30 days, timezone-aware) + SSE in-app notifications + BullMQ stubs
+- [x] 04-03-PLAN.md — Social UI: feed page, friends list, requests inbox, search, profile integration
 
 **UI hint**: yes
 
@@ -112,8 +112,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 05-01-PLAN.md — Wall Messages API: migration, MessageService (sanitize-html, anonymous, approval, reports), BullMQ enqueue
-- [ ] 05-02-PLAN.md — Wall UI: compose modal, wall section on profile, settings (who can post, anonymous, approval), pending inbox
+- [x] 05-01-PLAN.md — Wall Messages API: migration, MessageService (sanitize-html, anonymous, approval, reports), BullMQ enqueue
+- [x] 05-02-PLAN.md — Wall UI: compose modal, wall section on profile, settings (who can post, anonymous, approval), pending inbox
 
 **UI hint**: yes
 
@@ -161,10 +161,10 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Infrastructure | 0/5 | Not started | - |
-| 2. Authentication & Security Foundation | 0/4 | Not started | - |
-| 3. User Profiles | 0/4 | Not started | - |
-| 4. Social Graph | 0/3 | Not started | - |
-| 5. Message Wall | 0/2 | Not started | - |
+| 1. Foundation & Infrastructure | 5/5 | Complete | 2026-04-29 |
+| 2. Authentication & Security Foundation | 4/4 | Complete | 2026-04-29 |
+| 3. User Profiles | 4/4 | Complete | 2026-04-29 |
+| 4. Social Graph | 3/3 | Complete | 2026-04-30 |
+| 5. Message Wall | 2/2 | Complete | 2026-04-30 |
 | 6. Notifications | 3/3 | Complete | 2026-04-30 |
 | 7. Security Hardening & Polish | 3/3 | Complete | 2026-04-30 |

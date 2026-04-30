@@ -1,8 +1,0 @@
-@import "tailwindcss";
-
-/* Parabuains design tokens */
-@theme {
-  --color-brand-yellow: #facc15;
-  --color-brand-orange: #f97316;
-  --color-brand-purple: #a855f7;
-}
