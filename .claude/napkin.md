@@ -36,29 +36,29 @@
 2. **[2026-04-30] PowerShell interpreta [brackets] em paths como glob — usar -LiteralPath**
    Do instead: Get-Content -LiteralPath "...\[username]\file" ; Set-Content -LiteralPath "..." ; Remove-Item -LiteralPath "..."
 
-3. **[2026-04-29] Write files use PowerShell Set-Content, nao Write tool (permissao negada)**
+3. **[2026-04-30] BullMQ Queue/Worker: NUNCA chamar getNotificationsQueue() em module-level**
+   Do instead: envolver em lazy Proxy ou chamar apenas dentro de handlers/consumers; chamada antecipada tenta conectar Redis e trava testes.
+
+4. **[2026-04-29] Write files use PowerShell Set-Content, nao Write tool (permissao negada)**
    Do instead: usar Set-Content -LiteralPath "..." -Value $content via Bash.
 
-4. **[2026-04-29] Vitest no web: alias @ deve apontar para raiz do app, nao src/**
+5. **[2026-04-29] Vitest no web: alias @ deve apontar para raiz do app, nao src/**
    Do instead: `'@': resolve(__dirname, '.')` em vitest.config.ts; tsconfig paths `@/*` → `./*`.
 
-5. **[2026-04-29] Workspace packages nao resolvem em Vite/Vitest sem alias explicito**
+6. **[2026-04-29] Workspace packages nao resolvem em Vite/Vitest sem alias explicito**
    Do instead: adicionar `'@parabuains/db/schema': resolve(...)` e `'@parabuains/db': resolve(...)` no vitest.config.ts alias.
 
-6. **[2026-04-29] drizzle-orm nao resolve no vitest sem alias explicito**
+7. **[2026-04-29] drizzle-orm nao resolve no vitest sem alias explicito**
    Do instead: adicionar `'drizzle-orm': resolve('../../packages/db/node_modules/drizzle-orm')` no alias do vitest.config.ts.
 
-7. **[2026-04-29] @fastify/rate-limit usa redis.rateLimit() internamente — Proxy quebra**
+8. **[2026-04-29] @fastify/rate-limit usa redis.rateLimit() internamente — Proxy quebra**
    Do instead: em NODE_ENV=test, passar `redis: undefined` ao plugin de rate-limit para usar in-memory store.
 
-8. **[2026-04-30] tsconfig.json do web precisa de paths para workspace packages**
+9. **[2026-04-30] tsconfig.json do web precisa de paths para workspace packages**
    Do instead: adicionar `@parabuains/db`, `@parabuains/db/schema`, `drizzle-orm`, `drizzle-orm/*` em `paths` apontando para os paths `.pnpm` corretos.
 
-9. **[2026-04-30] Zod v4: ZodError usa .issues, nao .errors**
-   Do instead: usar `parsed.error.issues[0]?.message` em vez de `parsed.error.errors[0]?.message`.
-
-10. **[2026-04-30] JSX em Next.js route handlers: usar .tsx, nao .ts**
-    Do instead: renomear arquivos com JSX para .tsx (especialmente og/[username]/route.tsx).
+10. **[2026-04-30] Zod v4: ZodError usa .issues, nao .errors; JSX em route handlers usa .tsx**
+    Do instead: `parsed.error.issues[0]?.message`; renomear arquivos com JSX para .tsx.
 
 ## User Directives
 1. **[2026-04-29] Responder sempre em portugues**
