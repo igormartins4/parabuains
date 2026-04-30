@@ -8,6 +8,7 @@ import swaggerPlugin from './plugins/swagger.js';
 import sensiblePlugin from './plugins/sensible.js';
 import { healthRoutes } from './modules/health/routes.js';
 import { usersPlugin } from './modules/users/user.plugin.js';
+import { friendshipsPlugin } from './modules/friendships/friendship.plugin.js';
 
 export async function buildApp() {
   const app = Fastify({
@@ -33,6 +34,7 @@ export async function buildApp() {
   // Routes
   await app.register(healthRoutes, { prefix: '/v1' });
   await app.register(usersPlugin, { prefix: '/v1' });
+  await app.register(friendshipsPlugin, { prefix: '/v1' });
 
   return app;
 }
