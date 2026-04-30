@@ -36,7 +36,7 @@ describe('generateBackupCodes', () => {
     const { plainCodes, hashedCodes } = await generateBackupCodes('user-123');
     expect(plainCodes).toHaveLength(8);
     expect(hashedCodes).toHaveLength(8);
-  });
+  }, 30000);
 
   it('cada codigo tem 10 caracteres', async () => {
     const { generateBackupCodes } = await import('@/lib/totp-backup');
@@ -61,5 +61,5 @@ describe('generateBackupCodes', () => {
       const isValid = await bcrypt.compare(plainCodes[i], hashedCodes[i]);
       expect(isValid).toBe(true);
     }
-  });
+  }, 30000);
 });

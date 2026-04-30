@@ -16,7 +16,8 @@ export async function userRoutes(fastify: FastifyInstance) {
   // Error handler for AppError instances
   fastify.setErrorHandler((error, _request, reply) => {
     if (error instanceof AppError) {
-      return reply.code(error.statusCode).send({ error: error.code, message: error.message });
+      reply.code(error.statusCode).send({ error: error.code, message: error.message });
+      return;
     }
     // Re-throw for default Fastify error handling
     reply.send(error);

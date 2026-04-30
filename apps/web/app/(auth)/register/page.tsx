@@ -3,7 +3,7 @@
 import { useState, FormEvent } from 'react';
 import Link from 'next/link';
 import { signUp } from '@/lib/auth-client';
-import GoogleSignInButton from '@/components/auth/GoogleSignInButton';
+import { GoogleSignInButton } from '@/components/auth/GoogleSignInButton';
 
 export default function RegisterPage() {
   const [name, setName] = useState('');

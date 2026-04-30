@@ -39,7 +39,8 @@ export async function healthRoutes(app: FastifyInstance) {
       }
 
       const allHealthy = dbStatus === 'connected' && redisStatus === 'connected';
-      return reply.code(allHealthy ? 200 : 503).send({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return (reply as any).code(allHealthy ? 200 : 503).send({
         status: allHealthy ? 'ok' : 'degraded',
         db: dbStatus,
         redis: redisStatus,

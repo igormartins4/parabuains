@@ -3,7 +3,7 @@ import { FastifyPluginAsync, FastifyRequest, FastifyReply } from 'fastify';
 
 const authPlugin: FastifyPluginAsync = async (fastify) => {
   fastify.addHook('preHandler', async (request: FastifyRequest, reply: FastifyReply) => {
-    const routeConfig = (request.routeOptions?.config as Record<string, unknown> | undefined);
+    const routeConfig = (request.routeOptions?.config as unknown as Record<string, unknown> | undefined);
     if (routeConfig?.skipAuth) return;
 
     const authHeader = request.headers.authorization;
@@ -21,7 +21,7 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
 
   fastify.decorateRequest('userId', null);
   fastify.addHook('preHandler', async (request: FastifyRequest) => {
-    const routeConfig = (request.routeOptions?.config as Record<string, unknown> | undefined);
+    const routeConfig = (request.routeOptions?.config as unknown as Record<string, unknown> | undefined);
     if (routeConfig?.skipAuth) return;
     const payload = request.user as { sub?: string } | undefined;
     (request as FastifyRequest & { userId: string | null }).userId = payload?.sub ?? null;

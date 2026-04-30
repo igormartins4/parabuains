@@ -95,7 +95,7 @@ export class UserRepository {
       )
       .limit(5);
 
-    const [{ count }] = await this.db
+    const countResult = await this.db
       .select({ count: sql<number>`COUNT(*)` })
       .from(users)
       .where(
@@ -115,7 +115,7 @@ export class UserRepository {
         ),
       );
 
-    return { count: Number(count), sample: mutuals };
+    return { count: Number(countResult[0]?.count ?? 0), sample: mutuals };
   }
 
   async areFriends(userAId: string, userBId: string): Promise<boolean> {
