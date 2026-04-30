@@ -12,6 +12,7 @@ import { friendshipsPlugin } from './modules/friendships/friendship.plugin.js';
 import { feedPlugin } from './modules/feed/feed.plugin.js';
 import { ssePlugin } from './modules/notifications/sse.plugin.js';
 import { messagesPlugin } from './modules/messages/message.plugin.js';
+import { notificationPlugin } from './modules/notifications/notification.plugin.js';
 
 export async function buildApp() {
   const app = Fastify({
@@ -41,6 +42,7 @@ export async function buildApp() {
   await app.register(feedPlugin, { prefix: '/v1' });
   await app.register(ssePlugin, { prefix: '/v1' });
   await app.register(messagesPlugin, { prefix: '/v1' });
+  await app.register(notificationPlugin, { prefix: '/v1' });
 
   return app;
 }
