@@ -13,7 +13,7 @@ export function BirthYearToggle({ birthYearHidden }: BirthYearToggleProps) {
   function handleToggle() {
     const formData = new FormData();
     formData.set('birthYearHidden', String(!birthYearHidden));
-    startTransition(() => updatePrivacyAction(formData));
+    startTransition(() => { void updatePrivacyAction(formData); });
   }
 
   return (

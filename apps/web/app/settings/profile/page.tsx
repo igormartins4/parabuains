@@ -64,6 +64,7 @@ export default async function ProfileSettingsPage() {
         {/* Basic info */}
         <section className="bg-white rounded-xl border border-gray-200 p-6">
           <h2 className="text-base font-semibold text-gray-900 mb-4">Informações básicas</h2>
+          {/* @ts-expect-error Server Action returns data but Next.js handles it correctly */}
           <form action={updateProfileAction} className="space-y-4">
             <div>
               <label

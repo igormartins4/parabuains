@@ -56,7 +56,6 @@ export async function POST(req: NextRequest) {
   const processedBuffer = await sharp(rawBuffer)
     .resize(400, 400, { fit: 'cover', position: 'center' })
     .webp({ quality: 85 })
-    .withMetadata(false)
     .toBuffer();
 
   // 3. Upload processed file to canonical path

@@ -48,7 +48,7 @@ export async function updateProfileAction(formData: FormData) {
 
   const parsed = updateProfileSchema.safeParse(raw);
   if (!parsed.success) {
-    return { error: parsed.error.errors[0]?.message ?? 'Dados inválidos' };
+    return { error: parsed.error.issues[0]?.message ?? 'Dados inválidos' };
   }
 
   const res = await fetch(`${process.env.INTERNAL_API_URL}/v1/users/me/profile`, {
@@ -82,7 +82,7 @@ export async function updatePrivacyAction(formData: FormData) {
 
   const parsed = privacySchema.safeParse(raw);
   if (!parsed.success) {
-    return { error: parsed.error.errors[0]?.message ?? 'Dados inválidos' };
+    return { error: parsed.error.issues[0]?.message ?? 'Dados inválidos' };
   }
 
   const res = await fetch(`${process.env.INTERNAL_API_URL}/v1/users/me/profile`, {
@@ -114,7 +114,7 @@ export async function changeUsernameAction(formData: FormData) {
 
   const parsed = usernameSchema.safeParse(raw);
   if (!parsed.success) {
-    return { error: parsed.error.errors[0]?.message ?? 'Username inválido' };
+    return { error: parsed.error.issues[0]?.message ?? 'Username inválido' };
   }
 
   const res = await fetch(`${process.env.INTERNAL_API_URL}/v1/users/me/username`, {

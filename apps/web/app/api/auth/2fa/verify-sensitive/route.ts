@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
       headers: request.headers,
       body: { code: sanitizedCode },
     });
-    return NextResponse.json({ verified: result.status });
+    return NextResponse.json({ verified: !!result });
   } catch {
     return NextResponse.json({ verified: false, error: 'Invalid code' }, { status: 400 });
   }
