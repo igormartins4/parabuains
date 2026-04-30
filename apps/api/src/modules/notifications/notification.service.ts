@@ -21,7 +21,7 @@ export class NotificationService {
   constructor(
     private readonly prefsRepo: INotificationPreferencesRepository,
     private readonly logRepo: INotificationLogRepository,
-    private readonly emailTransport: EmailTransport,
+    private readonly emailTransport: EmailTransport | null,
     private readonly userRepo: IUserLookup,
     private readonly vapidTransport: VapidTransport | null = null,
     private readonly pushSubRepo: IPushSubscriptionRepository | null = null
@@ -53,7 +53,7 @@ export class NotificationService {
 
     // ── Email delivery ────────────────────────────────────────────────────────
     const emailPref = prefs.find((p) => p.channel === 'email');
-    if (emailPref?.enabled) {
+    if (emailPref?.enabled && this.emailTransport) {
       let senderName: string | null = null;
       if (authorId) {
         const author = await this.userRepo.findById(authorId);
@@ -121,7 +121,7 @@ export class NotificationService {
 
     // ── Email delivery ────────────────────────────────────────────────────────
     const emailPref = prefs.find((p) => p.channel === 'email');
-    if (emailPref?.enabled) {
+    if (emailPref?.enabled && this.emailTransport) {
       try {
         await this.emailTransport.sendFriendshipAcceptedNotification({
           to: recipient.email,

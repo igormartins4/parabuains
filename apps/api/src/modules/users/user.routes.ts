@@ -29,6 +29,12 @@ export async function userRoutes(fastify: FastifyInstance) {
     const { username } = getProfileParamsSchema.parse(request.params);
     const viewerId = request.userId ?? undefined;
     const profile = await service.getProfile(username, viewerId);
+    // Cache public profiles for 60s (CDN/browser); private profiles must not be cached
+    if (!viewerId) {
+      reply.header('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
+    } else {
+      reply.header('Cache-Control', 'private, no-store');
+    }
     return reply.send(profile);
   });
 

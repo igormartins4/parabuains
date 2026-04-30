@@ -1,4 +1,5 @@
 import type { FastifyInstance } from 'fastify';
+import { z } from 'zod/v4';
 import { AppError } from '../../errors.js';
 import { getRedis } from '../../infrastructure/redis.js';
 import { getNotificationsQueue } from '../../queues/notifications.queue.js';
@@ -7,6 +8,25 @@ import { AuditRepository } from '../audit/audit.repository.js';
 import { DrizzleMessageRepository } from './message.repository.js';
 import { MessageService } from './message.service.js';
 import type { WallSettings } from './message.types.js';
+
+const postWallSchema = z.object({
+  content: z
+    .string()
+    .min(1, 'Content is required')
+    .max(500, 'Content must be at most 500 characters'),
+  type: z.enum(['public', 'private', 'anonymous']),
+  website: z.string().optional(), // honeypot
+});
+
+const reportSchema = z.object({
+  reason: z.enum(['spam', 'harassment', 'inappropriate', 'other']),
+});
+
+const wallSettingsSchema = z.object({
+  wallWhoCanPost: z.enum(['friends', 'authenticated']).optional(),
+  wallAllowAnonymous: z.boolean().optional(),
+  wallRequireApproval: z.boolean().optional(),
+});
 
 export async function messageRoutes(fastify: FastifyInstance): Promise<void> {
   const repo = new DrizzleMessageRepository();
@@ -44,6 +64,12 @@ export async function messageRoutes(fastify: FastifyInstance): Promise<void> {
     const { username } = request.params as { username: string };
     const viewerId = request.userId;
     const messages = await service.getWallMessages(username, viewerId);
+    // Public wall messages cacheable for 30s
+    if (!viewerId) {
+      reply.header('Cache-Control', 'public, max-age=30, stale-while-revalidate=60');
+    } else {
+      reply.header('Cache-Control', 'private, no-store');
+    }
     return reply.send({ messages });
   });
 
@@ -72,8 +98,16 @@ export async function messageRoutes(fastify: FastifyInstance): Promise<void> {
         return reply.code(401).send({ error: 'UNAUTHORIZED', message: 'Authentication required' });
       }
 
+      const parsed = postWallSchema.safeParse(request.body);
+      if (!parsed.success) {
+        return reply.code(400).send({
+          error: 'VALIDATION_ERROR',
+          message: parsed.error.issues[0]?.message ?? 'Invalid request body',
+        });
+      }
+
       // Honeypot: silently discard bot submissions
-      if (request.body.website) {
+      if (parsed.data.website) {
         return reply.status(201).send({ id: 'ok', content: '' });
       }
 
@@ -104,8 +138,8 @@ export async function messageRoutes(fastify: FastifyInstance): Promise<void> {
       const message = await service.postMessage({
         profileId: profile.id,
         authorId,
-        content: request.body.content,
-        type: request.body.type,
+        content: parsed.data.content,
+        type: parsed.data.type,
       });
 
       return reply.status(201).send(message);
@@ -181,9 +215,16 @@ export async function messageRoutes(fastify: FastifyInstance): Promise<void> {
       if (!request.userId) {
         return reply.code(401).send({ error: 'UNAUTHORIZED', message: 'Authentication required' });
       }
+      const parsed = reportSchema.safeParse(request.body);
+      if (!parsed.success) {
+        return reply.code(400).send({
+          error: 'VALIDATION_ERROR',
+          message: parsed.error.issues[0]?.message ?? 'Invalid reason',
+        });
+      }
       request.auditAction = 'message.report';
       request.auditResource = `message:${request.params.id}`;
-      await service.reportMessage(request.params.id, request.userId, request.body.reason);
+      await service.reportMessage(request.params.id, request.userId, parsed.data.reason);
       return reply.status(201).send({ reported: true });
     }
   );
@@ -211,9 +252,16 @@ export async function messageRoutes(fastify: FastifyInstance): Promise<void> {
       if (!request.userId) {
         return reply.code(401).send({ error: 'UNAUTHORIZED', message: 'Authentication required' });
       }
+      const parsed = wallSettingsSchema.safeParse(request.body);
+      if (!parsed.success) {
+        return reply.code(400).send({
+          error: 'VALIDATION_ERROR',
+          message: parsed.error.issues[0]?.message ?? 'Invalid settings',
+        });
+      }
       request.auditAction = 'wall.settings_update';
       request.auditResource = `user:${request.userId}`;
-      await service.updateWallSettings(request.userId, request.body);
+      await service.updateWallSettings(request.userId, parsed.data);
       return reply.send({ updated: true });
     }
   );

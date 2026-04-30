@@ -22,6 +22,7 @@
     "@fastify/swagger": "^9.3.0",
     "@fastify/swagger-ui": "^5.2.0",
     "@parabuains/db": "workspace:*",
+    "@sentry/node": "^10.51.0",
     "better-auth": "^1.6.9",
     "bullmq": "^5.13.2",
     "drizzle-orm": "^0.45.2",

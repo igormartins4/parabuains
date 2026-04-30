@@ -14,6 +14,7 @@ import helmetPlugin from './plugins/helmet.js';
 import jwtPlugin from './plugins/jwt.js';
 import rateLimitPlugin from './plugins/rate-limit.js';
 import sensiblePlugin from './plugins/sensible.js';
+import sentryPlugin from './plugins/sentry.js';
 import swaggerPlugin from './plugins/swagger.js';
 
 export async function buildApp() {
@@ -30,6 +31,9 @@ export async function buildApp() {
   await app.register(rateLimitPlugin);
   await app.register(jwtPlugin);
   await app.register(authPlugin);
+
+  // Global error handler with Sentry capture
+  await app.register(sentryPlugin);
 
   // API documentation (dev only)
   await app.register(swaggerPlugin);

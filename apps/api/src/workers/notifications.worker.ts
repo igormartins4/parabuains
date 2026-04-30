@@ -16,9 +16,19 @@ function createNotificationService(): NotificationService {
   const userRepo = new UserRepository();
   const pushSubRepo = new DrizzlePushSubscriptionRepository();
 
-  const apiKey = process.env.RESEND_API_KEY ?? '';
+  const apiKey = process.env.RESEND_API_KEY;
   const fromEmail = process.env.RESEND_FROM_EMAIL ?? 'noreply@parabuains.com';
-  const emailTransport = new EmailTransport(apiKey, fromEmail);
+
+  if (!apiKey) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error(
+        'RESEND_API_KEY must be set in production — email notifications will not work'
+      );
+    }
+    console.warn('[notifications.worker] RESEND_API_KEY not set — email delivery disabled');
+  }
+
+  const emailTransport = apiKey ? new EmailTransport(apiKey, fromEmail) : null;
 
   const vapidPublicKey = process.env.VAPID_PUBLIC_KEY;
   const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY;
@@ -108,23 +118,30 @@ export function startNotificationsWorker(): Worker {
             );
             if (!alreadySentEmail) {
               try {
-                const apiKey = process.env.RESEND_API_KEY ?? '';
+                const apiKey = process.env.RESEND_API_KEY;
                 const fromEmail = process.env.RESEND_FROM_EMAIL ?? 'noreply@parabuains.com';
-                const emailTransport = new EmailTransport(apiKey, fromEmail);
-                await emailTransport.sendBirthdayReminder({
-                  to: recipient.email,
-                  recipientName: recipient.displayName,
-                  birthdayPersonName,
-                  daysUntil,
-                  birthMonthDay,
-                });
-                await logRepo.create({
-                  recipientId,
-                  subjectId: birthdayPersonId,
-                  channel: 'email',
-                  reminderType,
-                  status: 'sent',
-                });
+                if (!apiKey) {
+                  console.warn(
+                    '[notifications.worker] RESEND_API_KEY not set — skipping birthday email for',
+                    recipientId
+                  );
+                } else {
+                  const emailTransport = new EmailTransport(apiKey, fromEmail);
+                  await emailTransport.sendBirthdayReminder({
+                    to: recipient.email,
+                    recipientName: recipient.displayName,
+                    birthdayPersonName,
+                    daysUntil,
+                    birthMonthDay,
+                  });
+                  await logRepo.create({
+                    recipientId,
+                    subjectId: birthdayPersonId,
+                    channel: 'email',
+                    reminderType,
+                    status: 'sent',
+                  });
+                }
               } catch (err) {
                 await logRepo.create({
                   recipientId,

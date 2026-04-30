@@ -1,6 +1,10 @@
 import { buildApp } from './app.js';
+import { initSentry } from './sentry.js';
 import { startBirthdaySchedulerWorker } from './workers/birthday-scheduler.worker.js';
 import { startNotificationsWorker } from './workers/notifications.worker.js';
+
+// Initialize Sentry before anything else
+initSentry();
 
 const PORT = parseInt(process.env.API_PORT ?? '3001', 10);
 const HOST = process.env.API_HOST ?? '0.0.0.0';

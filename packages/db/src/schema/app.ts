@@ -152,6 +152,7 @@ export const wallMessages = pgTable(
   },
   (table) => [
     index('idx_wall_messages_profile').on(table.profileId, table.createdAt),
+    index('idx_wall_messages_status').on(table.profileId, table.status),
     check('wall_messages_content_length', sql`char_length(${table.content}) <= 500`),
     check(
       'wall_messages_status_check',
@@ -199,17 +200,21 @@ export const notificationPreferences = pgTable(
 );
 
 // ─── push_subscriptions ───────────────────────────────────────────────────────
-export const pushSubscriptions = pgTable('push_subscriptions', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  userId: uuid('user_id')
-    .notNull()
-    .references(() => users.id, { onDelete: 'cascade' }),
-  endpoint: text('endpoint').notNull().unique(),
-  p256dhKey: text('p256dh_key').notNull(),
-  authKey: text('auth_key').notNull(),
-  userAgent: text('user_agent'),
-  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
-});
+export const pushSubscriptions = pgTable(
+  'push_subscriptions',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    endpoint: text('endpoint').notNull().unique(),
+    p256dhKey: text('p256dh_key').notNull(),
+    authKey: text('auth_key').notNull(),
+    userAgent: text('user_agent'),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [index('idx_push_subscriptions_user').on(table.userId)]
+);
 
 // ─── notification_log ─────────────────────────────────────────────────────────
 export const notificationLog = pgTable(
@@ -230,6 +235,14 @@ export const notificationLog = pgTable(
   },
   (table) => [
     index('idx_notif_log_recipient').on(table.recipientId, table.sentAt),
+    // Idempotency index: prevent duplicate notifications per recipient/subject/channel/type/year
+    index('idx_notif_log_idempotency').on(
+      table.recipientId,
+      table.subjectId,
+      table.channel,
+      table.reminderType,
+      table.sentAt
+    ),
     check(
       'notification_log_reminder_type_check',
       sql`${table.reminderType} IN ('D7', 'D3', 'D1', 'Dday')`
