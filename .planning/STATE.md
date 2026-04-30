@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-04-29)
 
 ## Current Position
 
-Phase: 4 of 7 (Social Graph)
-Plan: 2 of 3 in current phase (04-02 complete)
-Status: Executing — Phase 4 Plan 03 is next
-Last activity: 2026-04-30 — 04-02 (Birthday Feed + SSE + BullMQ) complete
+Phase: 5 of 7 (Message Wall)
+Plan: 2 of 2 in current phase (05-02 complete)
+Status: Phase 5 complete — Phase 6 (Notifications) is next
+Last activity: 2026-04-30 — 05-01 (Wall Messages API) and 05-02 (Wall Messages UI) complete
 
-Progress: [██████░░░░] ~40% (Phases 1-3 assumed complete, 04-01 and 04-02 done)
+Progress: [████████░░] ~55% (Phases 1-4 complete, Phase 5 complete)
 
 ## Planning Complete — Full Plan Inventory
 
@@ -32,15 +32,16 @@ Progress: [██████░░░░] ~40% (Phases 1-3 assumed complete, 04
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2 (04-01, 04-02)
-- Average duration: ~45 min/plan
-- Total execution time: ~90 min
+- Total plans completed: 4 (04-01, 04-02, 05-01, 05-02)
+- Average duration: ~40 min/plan
+- Total execution time: ~160 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 04-social-graph | 2 | ~90min | ~45min |
+| 05-messages | 2 | ~70min | ~35min |
 
 *Updated after each plan completion*
 
@@ -93,5 +94,5 @@ None — all phases planned, ready to start executing Phase 1.
 ## Session Continuity
 
 Last session: 2026-04-30
-Stopped at: 04-02-PLAN.md complete; next is 04-03-PLAN.md
-Resume file: .planning/phases/04-social-graph/04-03-PLAN.md
+Stopped at: 05-02-PLAN.md complete; Phase 5 done; next is 06-01-PLAN.md
+Resume file: .planning/phases/06-notifications/06-01-PLAN.md
