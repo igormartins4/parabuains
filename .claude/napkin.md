@@ -63,6 +63,21 @@
 11. **[2026-04-30] pnpm workspace: duas instâncias do mesmo pacote causam incompatibilidade de tipos TS**
     Do instead: quando `PgTableWithColumns not assignable to PgTable<TableConfig>`, verificar se há múltiplas instâncias físicas (`(Get-Item node_modules/pkg).Target`). Usar `"pnpm": { "overrides": { "pkg": "version" } }` no package.json raiz para forçar deduplication.
 
+12. **[2026-04-30] Next.js App Router: server components exigem URL absoluta para fetch de rotas internas**
+    Do instead: criar `lib/api/base-url.ts` com `getBaseUrl()` que retorna `''` no browser e `NEXT_PUBLIC_APP_URL` no servidor. Adicionar `export const dynamic = 'force-dynamic'` em páginas que fazem fetch autenticado.
+
+13. **[2026-04-30] Next.js App Router: obrigatório ter app/layout.tsx (root layout) — sem ele, qualquer rota falha no build**
+    Do instead: garantir que `apps/web/app/layout.tsx` existe com `<html>` e `<body>`. Nunca deletar ou omitir o root layout.
+
+14. **[2026-04-30] @sentry/nextjs moderno: usar instrumentation.ts + instrumentation-client.ts, não sentry.server.config.ts**
+    Do instead: criar `instrumentation.ts` com `register()` e `export const onRequestError = Sentry.captureRequestError`. Criar `instrumentation-client.ts` para client-side. Deletar sentry.server.config.ts e sentry.edge.config.ts.
+
+15. **[2026-04-30] Workspace packages com imports .js em ESM: webpack do Next.js não resolve sem config explícita**
+    Do instead: adicionar `transpilePackages: ['@parabuains/db']` e `webpack: config => { config.resolve.extensionAlias = { '.js': ['.ts', '.tsx', '.js'] }; return config; }` no next.config.ts.
+
+16. **[2026-04-30] Guards de env var que executam em module-level quebram o build do Next.js (page data collection)**
+    Do instead: mover guards de env var para dentro de funções (lazy). Nunca fazer `throw` em module-level baseado em env vars.
+
 ## User Directives
 1. **[2026-04-29] Responder sempre em portugues**
    Do instead: todas as respostas em pt-BR.
