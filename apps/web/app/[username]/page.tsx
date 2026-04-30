@@ -10,6 +10,8 @@ import {
 } from '@/components/profile/BirthdayCountdown';
 import { ShareButton } from '@/components/profile/ShareButton';
 import { MutualFriends } from '@/components/profile/MutualFriends';
+import { FriendshipButton } from './FriendshipButton';
+import type { FriendshipStatus } from '@/lib/api/friendships';
 
 interface ProfilePageProps {
   params: Promise<{ username: string }>;
@@ -29,6 +31,21 @@ async function fetchProfile(username: string, serviceToken?: string) {
   if (res.status === 404 || res.status === 410) return null;
   if (!res.ok) throw new Error(`Failed to fetch profile: ${res.status}`);
   return res.json();
+}
+
+async function fetchFriendshipStatus(
+  profileId: string,
+  serviceToken: string,
+): Promise<{ status: FriendshipStatus; friendshipId?: string }> {
+  const res = await fetch(
+    `${process.env.INTERNAL_API_URL}/v1/friendships/status/${encodeURIComponent(profileId)}`,
+    {
+      headers: { Authorization: `Bearer ${serviceToken}` },
+      next: { revalidate: 0 },
+    },
+  );
+  if (!res.ok) return { status: 'none' };
+  return res.json() as Promise<{ status: FriendshipStatus; friendshipId?: string }>;
 }
 
 async function fetchMutualFriends(username: string, serviceToken: string) {
@@ -90,8 +107,12 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
 
   // Fetch mutual friends only if viewer is authenticated and not on own profile
   let mutualFriends = { count: 0, sample: [] };
+  let friendshipData: { status: FriendshipStatus; friendshipId?: string } | null = null;
   if (session?.user && session.user.id !== profile.id && serviceToken) {
-    mutualFriends = await fetchMutualFriends(username, serviceToken);
+    [mutualFriends, friendshipData] = await Promise.all([
+      fetchMutualFriends(username, serviceToken),
+      fetchFriendshipStatus(profile.id as string, serviceToken),
+    ]);
   }
 
   // Determine countdown visibility
@@ -132,6 +153,13 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
 
         <div className="flex items-center gap-3">
           <ShareButton username={username} displayName={profile.displayName} />
+          {friendshipData && (
+            <FriendshipButton
+              targetUserId={profile.id as string}
+              initialStatus={friendshipData.status}
+              initialFriendshipId={friendshipData.friendshipId}
+            />
+          )}
         </div>
       </section>
 
